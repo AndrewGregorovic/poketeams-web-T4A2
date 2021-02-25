@@ -3,7 +3,8 @@ import os
 
 def get_env_var(env_var):
     """
-    Utility function that fetches the requested environment variable or raises an error.
+    Utility function that fetches the requested environment variable,
+    raises an error if not found.
     """
 
     value = os.environ.get(env_var)
