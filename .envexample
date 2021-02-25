@@ -1,0 +1,5 @@
+FLASK_APP=src.main
+FLASK_ENV=development
+DB_URI=postgresql+psycopg2://<db-username>:<db-password>@localhost:5432/<database-name>
+DB_TEST_URI=postgresql+psycopg2://<db-username>:<db-password>@localhost:5432/<test-database-name>
+SECRET_KEY=
