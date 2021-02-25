@@ -1,0 +1,2 @@
+registerable_controllers = [
+]
