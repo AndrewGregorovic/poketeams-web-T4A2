@@ -9,7 +9,7 @@ class Team(db.Model):
     description = db.Column(db.String(255), nullable=True)
     is_private = db.Column(db.Boolean, nullable=False, default=True)
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    pokemon = db.relationship("Pokemon", backref="team")
+    team_pokemon = db.relationship("Teams_Pokemon", backref="team", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Team {self.id}: {self.name}>"
