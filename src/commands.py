@@ -100,7 +100,7 @@ def seed_db():
                 pokemon_move.pokeapi_id = team_pokemon.pokemon.pokeapi_id
                 pokemon_move.pokemon_move_index = i + 1
                 pokemon_move.move_id = move.move_id
-                team_pokemon.pokemon.pokemon_moves.append(pokemon_move)
+                db.session.add(pokemon_move)
 
     db.session.commit()
 

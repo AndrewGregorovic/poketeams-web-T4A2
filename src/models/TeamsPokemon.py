@@ -9,6 +9,7 @@ class Teams_Pokemon(db.Model):
     team_index = db.Column(db.Integer, primary_key=True)
     pokeapi_id = db.Column(db.Integer, db.ForeignKey("pokemon.pokeapi_id"))
     pokemon = db.relationship("Pokemon")
+    pokemon_moves = db.relationship("Pokemon_Moves", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Team {self.team_id}, Slot {self.team_index}>"

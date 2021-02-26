@@ -10,7 +10,7 @@ class TeamsPokemonSchema(ma.SQLAlchemyAutoSchema):
 
     team_id = ma.Integer(required=True)
     team_index = ma.Integer(required=True, validate=Range(min=1, max=6))
-    pokeapi_id = ma.Integer(required=True, validate=Range(min=1, max=898))
+    pokemon_id = ma.Integer(required=True, validate=Range(min=1, max=898))
     pokemon = ma.Nested("PokemonSchema", only=("pokeapi_id", "pokemon_id", "pokemon_name"))
 
 
