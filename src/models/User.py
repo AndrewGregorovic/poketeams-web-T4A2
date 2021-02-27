@@ -1,7 +1,19 @@
+from flask_login import UserMixin
+
 from src.main import db
 
 
-class User(db.Model):
+def get_user(user_id):
+    """
+    Function required for the user loader callback,
+    returns a user object from a given user id.
+    """
+
+    user = User.query.filter_by(id=user_id).first()
+    return user
+
+
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)

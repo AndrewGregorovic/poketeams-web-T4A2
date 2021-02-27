@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import flash, Flask, jsonify, redirect, url_for
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
@@ -32,6 +32,7 @@ def create_app():
     # These need to be inside the function
     from src.commands import db_commands
     from src.controllers import registerable_controllers
+    from src.models.User import get_user
 
     # Create the app and load default config settings
     app = Flask(__name__)
@@ -48,6 +49,11 @@ def create_app():
     app.register_blueprint(db_commands)
     for controller in registerable_controllers:
         app.register_blueprint(controller)
+
+    # Create user loader callback
+    @login_manager.user_loader
+    def load_user(user_id):
+        return get_user(user_id)
 
     @app.errorhandler(ValidationError)
     def handle_bad_request(error):
