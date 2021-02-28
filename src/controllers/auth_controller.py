@@ -1,52 +1,66 @@
-from flask import abort, Blueprint, jsonify, request
-from flask_login import login_user
+from flask import Blueprint, flash, redirect, render_template, url_for
+from flask_login import login_required, login_user, logout_user
 
+from src.forms import LogInForm, SignUpForm
 from src.main import bcrypt, db
 from src.models.User import User
-from src.schemas.UserSchema import user_schema
 
 
 auth = Blueprint("auth", __name__)
 
 
-# @auth.route("/", methods=["GET"])
-# def landing_page():
-#     pass
+@auth.route("/", methods=["GET"])
+def landing_page():
+    return render_template("landing.html")
 
 
-@auth.route("/auth/register", methods=["POST"])
-def auth_register():
-    user_fields = user_register_schema.load(request.json)
+@auth.route("/signup", methods=["GET", "POST"])
+def signup():
 
-    if User.query.filter_by(username=user_fields["username"]).first():
-        return abort(400, description="Username already in use.")
-    if User.query.filter_by(email=user_fields["email"]).first():
-        return abort(400, description="Email already registered.")
+    form = SignUpForm
+    if form.validate_on_submit():
+        if User.check_unique_username(form.username.data):
+            flash("A user already exists with that username.")
+        elif User.check_unique_email(form.email.data):
+            flash("A user already exists with that email address.")
+        else:
+            user = User()
+            user.username = form.username.data
+            user.email = form.email.data
+            user.password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
 
-    user = User()
-    user.username = user_fields["username"]
-    user.email = user_fields["email"]
-    user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
+            db.session.add(user)
+            db.session.commit()
 
-    db.session.add(user)
-    db.session.commit()
+            login_user(user)
+            flash("Logged in successfully.")
 
-    return (jsonify(user_schema.dump(user)), 201)
+            """Need to change this redirect after coding the users controller"""
+            return redirect(url_for("auth.landing_page"))
 
-
-@auth.route("/login", methods=["POST"])
-def auth_login():
-    user_fields = user_schema.load(request.json)
-    user = User.query.filter_by(email=user_fields["email"]).first()
-
-    if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
-        return abort(401, description="Incorrect email and password.")
-
-    login_user(user)
-
-    return f"{user.username} logged in successfully"
+    return render_template("signup.html")
 
 
-# @auth.route("/logout", methods=["GET"])
-# def logout():
-#     pass
+@auth.route("/login", methods=["GET", "POST"])
+def login():
+
+    form = LogInForm
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            flash("Logged in successfully.")
+
+            return redirect(url_for("auth.landing_page"))
+        else:
+            flash("Invalid email and password.")
+            return redirect(url_for("auth.login"))
+
+    return render_template("signup.html")
+
+
+@auth.route("/logout", methods=["GET"])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("auth.landing_page"))

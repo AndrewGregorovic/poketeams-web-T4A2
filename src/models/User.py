@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from src.main import db
+from src.main import bcrypt, db
 
 
 def get_user(user_id):
@@ -24,3 +24,14 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"<User {self.email}>"
+
+    def check_unique_email(self, email):
+        if User.query.filter_by(email=email).first():
+            return True
+
+    def check_unique_username(self, username):
+        if User.query.filter_by(username=username).first():
+            return True
+
+    def check_login(self, password):
+        return bcrypt.check_password_hash(self.password, password)
