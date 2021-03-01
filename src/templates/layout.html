@@ -1,10 +1,52 @@
-<!doctype html>
-<html>
-    <body>
-        <div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    {% block title %}
+
+    {% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: rgb(242,131,141);">
+        <div class="container"><a class="navbar-brand text-dark" href="{{ url_for('auth.landing_page') }}">Poketeams</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">View a Pokemon</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">View Public Teams</a></li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="#">View My Teams</a></li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    {% if not current_user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link login" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                        <li class="nav-item"><a class="nav-link login" href="{{ url_for('auth.login') }}">Log In</a></li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#">{{ current_user.username }}&nbsp;</a>
+                            <div class="dropdown-menu" style="background: rgb(242,131,141);">
+                                <a class="dropdown-item" href="#">Account Details</a>
+                                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main>
         {% block content %}
 
         {% endblock %}
-        </div>
-    </body>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>

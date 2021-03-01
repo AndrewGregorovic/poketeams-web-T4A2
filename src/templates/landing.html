@@ -1,5 +1,18 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    <title>Poketeams</title>
+{% endblock title %}
+
 {% block content %}
-    <h1>Landing Page</h1>
+    <div class="container d-xl-flex justify-content-xl-center" style="max-width: none;">
+        <div class="jumbotron" style="margin-top: 32px;max-width: 1000px;">
+            <h1 class="text-center">Poketeams</h1>
+            <p class="text-center">Pulls data from Pokeapi.co which you can view for individual Pokemon or to use for creating your own teams.</p>
+            <p class="text-center">Teams can only be created by registered users so create an account now to get started!</p>
+            {% if not current_user.is_authenticated %}
+                <p class="text-center"><a class="btn btn-primary" role="button" href="{{ url_for('auth.signup') }}">Sign Up!</a></p>
+            {% endif %}
+            </div>
+    </div>
 {% endblock content %}

@@ -1,5 +1,50 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    <title>Log In to Poketeams</title>
+{% endblock title %}
+
 {% block content %}
-    <h1>Log In Page</h1>
+    <div class="container d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center" style="max-width: none;">
+        <div class="card" style="max-width: 400px;width: 400px;min-width: 300px;margin: 50px;">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ form.csrf_token }}
+                    <h1>Log In</h1>
+                    <fieldset class="email" style="padding-right: 10px;padding-left: 10px;margin-top: 10px;">
+                        <legend>Email</legend>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <ul class="form-errors">
+                                {% for error in form.email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </fieldset>
+                    <fieldset class="password" style="padding-right: 10px;padding-left: 10px;margin-top: 10px;">
+                        <legend>Password</legend>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <ul class="form-errors">
+                                {% for error in form.password.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </fieldset>
+                    <div class="submit-button" style="margin-top: 20px;margin-left: 10px;margin-bottom: 20px;">
+                        {{ form.submit }}
+                    </div>
+                    <p style="margin-left: 10px;">Don't have an account?&nbsp;<a href="{{ url_for('auth.signup') }}">Sign up now</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
