@@ -17,7 +17,7 @@ def landing_page():
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
 
-    form = SignUpForm
+    form = SignUpForm()
     if form.validate_on_submit():
         if User.check_unique_username(form.username.data):
             flash("A user already exists with that username.")
@@ -33,30 +33,27 @@ def signup():
             db.session.commit()
 
             login_user(user)
-            flash("Logged in successfully.")
 
             """Need to change this redirect after coding the users controller"""
             return redirect(url_for("auth.landing_page"))
 
-    return render_template("signup.html")
+    return render_template("signup.html", form=form)
 
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
 
-    form = LogInForm
+    form = LogInForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            flash("Logged in successfully.")
-
             return redirect(url_for("auth.landing_page"))
         else:
             flash("Invalid email and password.")
             return redirect(url_for("auth.login"))
 
-    return render_template("signup.html")
+    return render_template("login.html", form=form)
 
 
 @auth.route("/logout", methods=["GET"])

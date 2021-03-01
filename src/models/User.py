@@ -25,13 +25,15 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.email}>"
 
+    @classmethod
     def check_unique_email(self, email):
         if User.query.filter_by(email=email).first():
             return True
 
+    @classmethod
     def check_unique_username(self, username):
         if User.query.filter_by(username=username).first():
             return True
 
-    def check_login(self, password):
+    def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
