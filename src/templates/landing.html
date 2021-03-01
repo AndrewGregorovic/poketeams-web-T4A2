@@ -5,6 +5,12 @@
 {% endblock title %}
 
 {% block content %}
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        {{ message }}
+    </div>
+{% endfor %}
     <div class="container d-xl-flex justify-content-xl-center" style="max-width: none;">
         <div class="jumbotron" style="margin-top: 32px;max-width: 1000px;">
             <h1 class="text-center">Poketeams</h1>

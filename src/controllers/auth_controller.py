@@ -19,9 +19,9 @@ def signup():
 
     form = SignUpForm()
     if form.validate_on_submit():
-        if User.check_unique_username(form.username.data):
+        if not User.check_unique_username(form.username.data):
             flash("A user already exists with that username.")
-        elif User.check_unique_email(form.email.data):
+        elif not User.check_unique_email(form.email.data):
             flash("A user already exists with that email address.")
         else:
             user = User()
@@ -60,4 +60,5 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash("You have been successfully logged out.")
     return redirect(url_for("auth.landing_page"))
