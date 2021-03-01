@@ -20,7 +20,7 @@ class SignUpForm(FlaskForm):
         DataRequired(),
         EqualTo("password", message="Both passwords need to match.")
     ])
-    submit = SubmitField("Sign Up")
+    submit = SubmitField("Create Account")
 
 
 class LogInForm(FlaskForm):
