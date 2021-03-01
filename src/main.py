@@ -43,6 +43,7 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
     migrate.init_app(app, db)
 
     # Register blueprints
@@ -54,6 +55,12 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return get_user(user_id)
+
+    # Handle unauthorized requests
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        flash("You must be logged in to view this page.")
+        return redirect(url_for("auth.login"))
 
     @app.errorhandler(ValidationError)
     def handle_bad_request(error):
