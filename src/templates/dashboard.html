@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>Poketeams Dashboard</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="jumbotron" style="width: auto;">
+            <h2 class="text-center">Welcome, {{ current_user.username }}</h2>
+            <p class="text-center">What would you like to do?</p>
+        </div>
+        <div class="row d-md-flex justify-content-center justify-content-md-center" style="margin: auto;max-width: 1500px;">
+            <a class="col-md-4" style="margin: 20px;border-radius: 20px;max-width: 335px;" href="{{ url_for('auth.landing_page') }}">
+                <div class="col-md-4" style="border-radius: 20px;padding: 20px;max-width: 335px;border-style: solid;border-color: var(--red);">
+                    <h4 class="text-center">View a Pokemon</h4>
+                </div>
+            </a>
+            <a class="col-md-4" style="margin: 20px;border-radius: 20px;max-width: 335px;" href="{{ url_for('auth.landing_page') }}">
+                <div class="col-md-4" style="border-radius: 20px;padding: 20px;max-width: 335px;border-style: solid;border-color: var(--red);">
+                    <h4 class="text-center">View Public Teams</h4>
+                </div>
+            </a>
+            <a class="col-md-4" style="margin: 20px;border-radius: 20px;max-width: 335px;" href="{{ url_for('auth.landing_page') }}">
+                <div class="col-md-4" style="border-radius: 20px;padding: 20px;max-width: 335px;border-style: solid;border-color: var(--red);">
+                    <h4 class="text-center">View My Teams</h4>
+                </div>
+            </a>
+            <a class="col-md-4" style="margin: 20px;border-radius: 20px;max-width: 335px;" href="{{ url_for('auth.landing_page') }}">
+                <div class="col-md-4" style="border-radius: 20px;padding: 20px;max-width: 335px;border-style: solid;border-color: var(--red);">
+                    <h4 class="text-center">Create a Team</h4>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock content %}

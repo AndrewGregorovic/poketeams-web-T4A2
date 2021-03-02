@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>Poketeams</title>
+{% endblock title %}
+
+{% block content %}
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        {{ message }}
+    </div>
+{% endfor %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row d-md-flex justify-content-center justify-content-md-center" style="margin: auto;max-width: 600px;">
+            <div class="col-md-12" style="margin: 100px;border-radius: 20px;border-width: 2px;border-style: solid;padding: 50px;">
+                <h2 style="margin-bottom: 50px;">Account Details</h2>
+                <p>Username:&nbsp;&nbsp;&nbsp;
+                    <span style="font-style: normal;font-weight: 600;">{{ current_user.username }}</span>
+                </p>
+                <p>Email Address:&nbsp;&nbsp;&nbsp;
+                    <span style="font-style: normal;font-weight: 600;">{{ current_user.email }}</span>
+                </p>
+                <div class="text-left d-flex justify-content-center" style="margin-top: 50px;">
+                    <a href="{{ url_for('users.edit_user_account_details') }}">
+                        <button class="btn btn-primary" type="button" style="margin-right: 50px;">Edit Account</button>
+                    </a>
+                    <a href="{{ url_for('users.dashboard') }}">
+                        <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
