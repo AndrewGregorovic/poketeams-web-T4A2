@@ -34,8 +34,7 @@ def signup():
 
             login_user(user)
 
-            """Need to change this redirect after coding the users controller"""
-            return redirect(url_for("auth.landing_page"))
+            return redirect(url_for("users.dashboard"))
 
     return render_template("signup.html", form=form)
 
@@ -48,7 +47,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect(url_for("auth.landing_page"))
+            return redirect(url_for("users.dashboard"))
         else:
             flash("Invalid email and password.")
             return redirect(url_for("auth.login"))
