@@ -27,3 +27,24 @@ class LogInForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Log In")
+
+
+class EditUserAccountForm(FlaskForm):
+    username = StringField("Username", validators=[
+        Length(min=3, max=30)
+    ])
+    email = StringField("Email", validators=[
+        Email()
+    ])
+    current_password = PasswordField("Current Password")
+    new_password = PasswordField("New Password", validators=[
+        Length(min=6)
+    ])
+    confirm_password = PasswordField("Confirm Password", validators=[
+        EqualTo("new_password", message="Both passwords need to match.")
+    ])
+    submit = SubmitField("Apply Changes")
+
+
+class DeleteUserAccountForm(FlaskForm):
+    submit = SubmitField("Delete Account")
