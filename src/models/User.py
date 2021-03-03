@@ -26,13 +26,13 @@ class User(db.Model, UserMixin):
         return f"<User {self.email}>"
 
     @classmethod
-    def check_unique_email(self, email):
+    def check_unique_email(cls, email):
         if User.query.filter_by(email=email).first():
             return False
         return True
 
     @classmethod
-    def check_unique_username(self, username):
+    def check_unique_username(cls, username):
         if User.query.filter_by(username=username).first():
             return False
         return True
