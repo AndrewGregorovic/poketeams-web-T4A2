@@ -23,11 +23,17 @@
                 </p>
                 <div class="text-left d-flex justify-content-center" style="margin-top: 50px;">
                     <a href="{{ url_for('users.edit_user_account_details') }}">
-                        <button class="btn btn-primary" type="button" style="margin-right: 50px;">Edit Account</button>
+                        <button class="btn btn-primary" type="button" style="margin-right: 40px;">Edit Account</button>
                     </a>
                     <a href="{{ url_for('users.dashboard') }}">
-                        <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                        <button class="btn btn-primary" type="button" style="margin-left: 0px 40px;">Back</button>
                     </a>
+                    <form method="POST" action="{{ url_for('users.delete_user_account') }}">
+                        {{ form.csrf_token }}
+                        <div class="submit-button" style="margin-left: 40px;margin-top: 5px;">
+                            {{ form.submit }}
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

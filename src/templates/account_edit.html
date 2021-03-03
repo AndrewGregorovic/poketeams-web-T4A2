@@ -11,7 +11,82 @@
         {{ message }}
     </div>
 {% endfor %}
-    <div>
-        
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row d-md-flex justify-content-center justify-content-md-center" style="margin: auto;max-width: 600px;">
+            <div class="col-md-12" style="margin: 100px;border-radius: 20px;border-width: 2px;border-style: solid;padding: 50px;">
+                <form method="POST" action="{{ url_for('users.edit_user_account_details') }}">
+                    {{ form.csrf_token }}
+                    <h2 style="margin-bottom: 50px;">Edit Account Details</h2>
+                    <fieldset>
+                        <legend style="font-size: 16px;">Username</legend>
+                        {{ form.username(placeholder=current_user.username) }}
+                        {% if form.username.errors %}
+                            <ul class="form-errors">
+                                {% for error in form.username.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </fieldset>
+                    <fieldset>
+                        <legend style="font-size: 16px;">Email Address</legend>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <ul class="form-errors">
+                                {% for error in form.email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </fieldset>
+                    <div style="margin-top: 30px;">
+                        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1" role="button">Change Password</a>
+                        <div class="collapse" id="collapse-1" style="margin-top: 20px;border-width: 1px;border-style: solid;border-radius: 10px;padding: 20px;">
+                            <fieldset>
+                                <legend style="font-size: 16px;">Current Password</legend>
+                                {{ form.current_password }}
+                                {% if form.current_password.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in form.current_password.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </fieldset>
+                            <fieldset>
+                                <legend style="font-size: 16px;">New Password</legend>
+                                {{ form.new_password }}
+                                {% if form.new_password.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in form.new_password.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </fieldset>
+                            <fieldset>
+                                <legend style="font-size: 16px;">Confirm Password</legend>
+                                {{ form.confirm_password }}
+                                {% if form.confirm_password.errors %}
+                                    <ul class="form-errors">
+                                        {% for error in form.confirm_password.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="text-left d-flex justify-content-center" style="margin-top: 50px;">
+                        <div class="submit-button" style="margin-right: 50px;margin-top: 5px;">
+                            {{ form.submit }}
+                        </div>
+                        <a href="{{ url_for('users.get_user_account_details') }}">
+                            <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock content %}
