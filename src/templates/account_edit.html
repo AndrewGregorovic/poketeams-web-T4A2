@@ -30,7 +30,7 @@
                     </fieldset>
                     <fieldset>
                         <legend style="font-size: 16px;">Email Address</legend>
-                        {{ form.email }}
+                        {{ form.email(placeholder=current_user.email) }}
                         {% if form.email.errors %}
                             <ul class="form-errors">
                                 {% for error in form.email.errors %}
