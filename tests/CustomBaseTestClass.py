@@ -1,6 +1,8 @@
+import os
 from unittest import TestCase
 
 from flask import url_for
+from flask_login import current_user, logout_user
 
 from src.main import create_app, db
 
@@ -13,6 +15,7 @@ class CustomBaseTestClass(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        os.environ['FLASK_ENV'] = "testing"
         cls.app = create_app()
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
@@ -22,10 +25,12 @@ class CustomBaseTestClass(TestCase):
 
         db.create_all()
         runner = cls.app.test_cli_runner()
-        result = runner.invoke(args=["db-custom", "seed"])
+        runner.invoke(args=["db-custom", "seed"])
 
     @classmethod
     def tearDownClass(cls):
+        if current_user.is_authenticated:
+            logout_user()
         db.session.remove()
         runner = cls.app.test_cli_runner()
         runner.invoke(args=["db-custom", "drop"])
