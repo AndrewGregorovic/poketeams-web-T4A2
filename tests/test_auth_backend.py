@@ -85,15 +85,15 @@ class TestAuthBackend(CustomBaseTestClass):
             "confirm_password": "123456"
         }
 
-        with self.client:
-            response1 = self.post_request(url_for("auth.signup"), user_data1)
-            response2 = self.post_request(url_for("auth.signup"), user_data2)
-            response3 = self.post_request(url_for("auth.signup"), user_data3)
-            response4 = self.post_request(url_for("auth.signup"), user_data4)
-            response5 = self.post_request(url_for("auth.signup"), user_data5)
-            response6 = self.post_request(url_for("auth.signup"), user_data6)
-            response7 = self.post_request(url_for("auth.signup"), user_data7)
-            response8 = self.post_request(url_for("auth.signup"), user_data8)
+        with self.client as c:
+            response1 = c.post(url_for("auth.signup"), data=user_data1, follow_redirects=True)
+            response2 = c.post(url_for("auth.signup"), data=user_data2, follow_redirects=True)
+            response3 = c.post(url_for("auth.signup"), data=user_data3, follow_redirects=True)
+            response4 = c.post(url_for("auth.signup"), data=user_data4, follow_redirects=True)
+            response5 = c.post(url_for("auth.signup"), data=user_data5, follow_redirects=True)
+            response6 = c.post(url_for("auth.signup"), data=user_data6, follow_redirects=True)
+            response7 = c.post(url_for("auth.signup"), data=user_data7, follow_redirects=True)
+            response8 = c.post(url_for("auth.signup"), data=user_data8, follow_redirects=True)
 
             self.assertEqual(response1.status_code, 200)
             self.assertIsNotNone(User.query.filter_by(username=user_data1["username"], email=user_data1["email"]).first())
@@ -160,7 +160,7 @@ class TestAuthBackend(CustomBaseTestClass):
             self.assertIn(b"Invalid email and password.", response2.data)
 
             response3 = self.login_follow(user_data3)
-            
+
             self.assertTrue(current_user.is_anonymous)
             self.assertEqual(response3.status_code, 200)
             self.assertIn(b"Invalid email and password.", response3.data)

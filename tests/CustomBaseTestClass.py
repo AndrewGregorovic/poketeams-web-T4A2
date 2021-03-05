@@ -39,14 +39,6 @@ class CustomBaseTestClass(TestCase):
         cls.context.pop()
 
     @classmethod
-    def get_request(cls, endpoint):
-        return cls.client.get(endpoint, follow_redirects=True)
-
-    @classmethod
-    def post_request(cls, endpoint, data=None):
-        return cls.client.post(endpoint, data=data, follow_redirects=True)
-
-    @classmethod
     def login(cls, data):
         return cls.client.post(url_for("auth.login"), data=data)
 

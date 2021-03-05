@@ -38,6 +38,7 @@ class TestAuthFrontend(CustomBaseTestClass):
             self.assertEqual(template.name, "signup.html")
             self.assertIsInstance(context["form"], SignUpForm)
 
+            # Test status code for redirect
             signup_data1 = {
                 "username": "unittest1",
                 "email": "unittest1@test.com",
@@ -52,7 +53,6 @@ class TestAuthFrontend(CustomBaseTestClass):
                 "confirm_password": "123456"
             }
 
-            # Test status code for redirect
             response = c.post(url_for("auth.signup"), data=signup_data1)
 
             self.assertEqual(response.status_code, 302)
@@ -73,7 +73,7 @@ class TestAuthFrontend(CustomBaseTestClass):
         # Test login.html
         with self.client as c:
             with captured_templates(self.app) as templates:
-                response = self.client.get(url_for("auth.login"))
+                response = c.get(url_for("auth.login"))
                 template, context = templates[0]
 
             self.assertEqual(response.status_code, 200)
@@ -101,7 +101,7 @@ class TestAuthFrontend(CustomBaseTestClass):
         """
 
         # Test status code for redirect
-        with self.client as c:
+        with self.client:
             self.login({"email": "test1@test.com", "password": "123456"})
 
             response = self.logout()
