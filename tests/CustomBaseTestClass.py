@@ -48,8 +48,16 @@ class CustomBaseTestClass(TestCase):
 
     @classmethod
     def login(cls, data):
+        return cls.client.post(url_for("auth.login"), data=data)
+
+    @classmethod
+    def login_follow(cls, data):
         return cls.client.post(url_for("auth.login"), data=data, follow_redirects=True)
 
     @classmethod
     def logout(cls):
-        cls.client.get(url_for("auth.logout"))
+        return cls.client.get(url_for("auth.logout"))
+
+    @classmethod
+    def logout_follow(cls):
+        return cls.client.get(url_for("auth.logout"), follow_redirects=True)

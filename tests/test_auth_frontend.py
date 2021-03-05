@@ -7,7 +7,7 @@ from tests.helper_function import captured_templates
 
 class TestAuthFrontend(CustomBaseTestClass):
     """
-    Test cases to test the frontend side of the auth controller endpoints.
+    Test cases to test the frontend template rendering and redirects of the auth controller endpoints.
     """
 
     def test_landing_page(self):
@@ -15,45 +15,105 @@ class TestAuthFrontend(CustomBaseTestClass):
         Tests that the landing page is rendered correctly.
         """
 
-        with captured_templates(self.app) as templates:
-            response = self.client.get(url_for("auth.landing_page"))
-            template, context = templates[0]
+        with self.client as c:
+            with captured_templates(self.app) as templates:
+                response = c.get(url_for("auth.landing_page"))
+                template, context = templates[0]
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(template.name, 'landing.html')
+        self.assertEqual(template.name, "landing.html")
 
     def test_signup(self):
         """
-        Tests that the signup page is rendered correctly.
+        Tests that the signup page is rendered correctly, and the signup endpoint correctly redirects valid signups and renders the dashboard page.
         """
 
-        with captured_templates(self.app) as templates:
-            response = self.client.get(url_for("auth.signup"))
-            template, context = templates[0]
+        # Test signup.html
+        with self.client as c:
+            with captured_templates(self.app) as templates:
+                response = c.get(url_for("auth.signup"))
+                template, context = templates[0]
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(template.name, 'signup.html')
-        self.assertIsInstance(context["form"], SignUpForm)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(template.name, "signup.html")
+            self.assertIsInstance(context["form"], SignUpForm)
+
+            signup_data1 = {
+                "username": "unittest1",
+                "email": "unittest1@test.com",
+                "password": "123456",
+                "confirm_password": "123456"
+            }
+
+            signup_data2 = {
+                "username": "unittest2",
+                "email": "unittest2@test.com",
+                "password": "123456",
+                "confirm_password": "123456"
+            }
+
+            # Test status code for redirect
+            response = c.post(url_for("auth.signup"), data=signup_data1)
+
+            self.assertEqual(response.status_code, 302)
+
+            # Test when redirect is followed
+            with captured_templates(self.app) as templates:
+                response = c.post(url_for("auth.signup"), data=signup_data2, follow_redirects=True)
+                template, context = templates[0]
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(template.name, "dashboard.html")
 
     def test_login(self):
         """
-        Tests that the login page is rendered correctly.
+        Tests that the login page is rendered correctly, and the login endpoint correctly redirects valid logins and renders the dashboard page.
         """
 
-        with captured_templates(self.app) as templates:
-            response = self.client.get(url_for("auth.login"))
-            template, context = templates[0]
+        # Test login.html
+        with self.client as c:
+            with captured_templates(self.app) as templates:
+                response = self.client.get(url_for("auth.login"))
+                template, context = templates[0]
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(template.name, 'login.html')
-        self.assertIsInstance(context["form"], LogInForm)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(template.name, "login.html")
+            self.assertIsInstance(context["form"], LogInForm)
+
+            # Test status code for redirect
+            response = self.login({"email": "test2@test.com", "password": "123456"})
+
+            self.assertEqual(response.status_code, 302)
+
+            self.logout()
+
+            # Test when redirect is followed
+            with captured_templates(self.app) as templates:
+                response = self.login_follow({"email": "test2@test.com", "password": "123456"})
+                template, context = templates[0]
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(template.name, "dashboard.html")
 
     def test_logout(self):
         """
-        Tests that the logout endpoint correctly redirects.
+        Tests that the logout endpoint correctly redirects and renders the landing page.
         """
 
-        self.login({"email": "test1@test.com", "password": "123456"})
-        response = self.client.get(url_for("auth.logout"))
+        # Test status code for redirect
+        with self.client as c:
+            self.login({"email": "test1@test.com", "password": "123456"})
 
-        self.assertEqual(response.status_code, 302)
+            response = self.logout()
+
+            self.assertEqual(response.status_code, 302)
+
+            # Test when redirect is followed
+            self.login({"email": "test1@test.com", "password": "123456"})
+            with captured_templates(self.app) as templates:
+                response = self.logout_follow()
+                template, context = templates[0]
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(template.name, "landing.html")
+                self.assertIn(b"You have been successfully logged out.", response.data)
