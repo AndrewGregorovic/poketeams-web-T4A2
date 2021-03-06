@@ -28,6 +28,20 @@ class TestAuthFrontend(CustomBaseTestClass):
         Tests that the signup page is rendered correctly, and the signup endpoint correctly redirects valid signups and renders the dashboard page.
         """
 
+        signup_data1 = {
+            "username": "unittest1",
+            "email": "unittest1@test.com",
+            "password": "123456",
+            "confirm_password": "123456"
+        }
+
+        signup_data2 = {
+            "username": "unittest2",
+            "email": "unittest2@test.com",
+            "password": "123456",
+            "confirm_password": "123456"
+        }
+
         # Test signup.html
         with self.client as c:
             with captured_templates(self.app) as templates:
@@ -39,20 +53,6 @@ class TestAuthFrontend(CustomBaseTestClass):
             self.assertIsInstance(context["form"], SignUpForm)
 
             # Test status code for redirect
-            signup_data1 = {
-                "username": "unittest1",
-                "email": "unittest1@test.com",
-                "password": "123456",
-                "confirm_password": "123456"
-            }
-
-            signup_data2 = {
-                "username": "unittest2",
-                "email": "unittest2@test.com",
-                "password": "123456",
-                "confirm_password": "123456"
-            }
-
             response = c.post(url_for("auth.signup"), data=signup_data1)
 
             self.assertEqual(response.status_code, 302)

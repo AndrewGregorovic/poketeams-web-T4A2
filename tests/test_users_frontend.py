@@ -46,6 +46,9 @@ class TestUsersFrontend(CustomBaseTestClass):
         Tests that the edit user account details page is rendered correctly, and the endpoint correctly redirects on valid form data and renders the account details page.
         """
 
+        edit_data1 = {"username": "tester1"}
+        edit_data2 = {"username": "unittest1"}
+
         # Test account_edit.html
         with self.client as c:
             self.login({"email": "test1@test.com", "password": "123456"})
@@ -59,9 +62,6 @@ class TestUsersFrontend(CustomBaseTestClass):
                 self.assertIsInstance(context["form"], EditUserAccountForm)
 
             # Test status code for redirect
-            edit_data1 = {"username": "tester1"}
-            edit_data2 = {"username": "unittest1"}
-
             response = c.post(url_for("users.edit_user_account_details"), data=edit_data1)
 
             self.assertEqual(response.status_code, 302)
