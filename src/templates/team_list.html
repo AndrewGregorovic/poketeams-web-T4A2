@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>My Teams</title>
+{% endblock title %}
+
+{% block content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row" style="margin: 0px;width: auto;">
+            <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                <h2 class="text-center">My Pokemon Teams</h2>
+            </div>
+        </div>
+        <div class="row" style="margin: 0px;width: auto;">
+            <div class="col" style="width: auto;padding: 100px 0px;">
+                <p class="text-center" style="font-size: 32px;font-weight: 300;">You have not created any Pokemon teams.</p>
+                <p class="text-center"><button class="btn btn-primary" type="button" style="margin: auto;">Create a Team</button>&nbsp; to create a team.</p>
+            </div>
+        </div>
+        <div class="row justify-content-around" style="margin: 0px;padding: 20px;">
+            <div class="col" style="max-width: 23%;margin-bottom: 30px;min-width: 300px;padding: 10px;border-radius: 10px;border-width: 2px;border-style: solid;">
+                <h4 class="text-center" style="margin-top: 10px;">Heading</h4>
+                <p class="text-center" style="margin-bottom: 20px;">by &lt;user&gt;</p>
+                <p style="margin-left: 70px;margin-bottom: 10px;">Slot #1: Fletchinder</p>
+                <p style="margin-left: 70px;margin-bottom: 10px;">Slot #1: Fletchinder</p>
+                <p style="margin-left: 70px;margin-bottom: 10px;">Slot #1: Fletchinder</p>
+                <p style="margin-left: 70px;margin-bottom: 10px;">Slot #1: Fletchinder</p>
+                <p style="margin-left: 70px;margin-bottom: 10px;">Slot #1: Fletchinder</p>
+                <p style="margin-left: 70px;margin-bottom: 20px;">Slot #1: Fletchinder</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
