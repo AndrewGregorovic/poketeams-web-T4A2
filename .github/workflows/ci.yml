@@ -1,0 +1,39 @@
+name: Continuous Integration
+on:
+  push:
+
+jobs:
+  unit_testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+      - name: Set Up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.0
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run Tests
+        env:
+          FLASK_ENV: workflow
+        run: |
+          python -m unittest discover tests -v
+  code_checking:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+      - name: Set Up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.0
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run Checks
+        run: |
+          flake8 --ignore=E501 src tests
