@@ -15,7 +15,8 @@ class CustomBaseTestClass(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        os.environ['FLASK_ENV'] = "testing"
+        if os.environ.get("FLASK_ENV") != "workflow":
+            os.environ["FLASK_ENV"] = "testing"
         cls.app = create_app()
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
