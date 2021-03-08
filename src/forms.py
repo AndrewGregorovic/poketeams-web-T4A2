@@ -53,3 +53,33 @@ class EditUserAccountForm(FlaskForm):
 
 class DeleteUserAccountForm(FlaskForm):
     submit = SubmitField("Delete Account")
+
+
+class CreateTeamForm(FlaskForm):
+    team_name = StringField("Team Name", validators=[
+        DataRequired(),
+        Length(min=3, max=50)
+    ])
+    description = TextAreaField("description", validators=[
+        Optional(),
+        Length(max=255)
+    ])
+    is_private = BooleanField()
+    submit = SubmitField("Create Team")
+
+
+class EditTeamForm(FlaskForm):
+    team_name = StringField("Team Name", validators=[
+        Optional(),
+        Length(min=3, max=50)
+    ])
+    description = TextAreaField("description", validators=[
+        Optional(),
+        Length(max=255)
+    ])
+    is_private = BooleanField()
+    submit = SubmitField("Create Team")
+
+
+class DeleteTeamForm(FlaskForm):
+    submit = SubmitField("Delete Team")
