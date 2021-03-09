@@ -1,15 +1,10 @@
 import random
 
 from flask import url_for
-from flask_login import current_user
 
-# Flake8 ignored imports are required because of database relationships
-# from src.models.Move import Move                            # noqa: F401
-# from src.models.Pokemon import Pokemon                      
 from src.models.PokemonMoves import Pokemon_Moves
 from src.models.Team import Team
 from src.models.TeamsPokemon import Teams_Pokemon
-# from src.models.User import User
 from tests.CustomBaseTestClass import CustomBaseTestClass
 from tests.helper_function import captured_templates
 
@@ -26,7 +21,7 @@ class TestTeamsBackend(CustomBaseTestClass):
 
         with self.client as c:
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("teams.get_public_teams"))
+                c.get(url_for("teams.get_public_teams"))
                 template, context = templates[0]
 
                 for team in context["teams"]:
@@ -103,7 +98,7 @@ mi, quis fermentum ligula. Donec ullamcorper.""",
             team = random.choice(Team.query.filter_by(is_private=False).all())
 
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("teams.get_team", team_id=team.id))
+                c.get(url_for("teams.get_team", team_id=team.id))
                 template, context = templates[0]
 
                 self.assertEqual(len(context["team"]["team_pokemon"]), 6)
