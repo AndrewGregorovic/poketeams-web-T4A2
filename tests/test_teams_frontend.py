@@ -48,10 +48,11 @@ class TestTeamsFrontend(CustomBaseTestClass):
         Tests that the create team page is rendered correctly, and the endpoint correctly redirects on valid form data and renders the team view page.
         """
 
+        # "" is a false value for the boolean field
         team_data1 = {
             "team_name": "test 1",
             "description": "first team testing creation",
-            "is_private": False
+            "is_private": ""
         }
         team_data2 = {
             "team_name": "test 2",
@@ -147,10 +148,11 @@ class TestTeamsFrontend(CustomBaseTestClass):
         Tests that the edit team page is rendered correctly, and the endpoint correctly redirects on valid form data and renders the team view page.
         """
 
+        # "" is a false value for the boolean field
         edit_data1 = {
             "team_name": "edit 1",
             "description": "testing editing team details",
-            "is_private": False
+            "is_private": ""
         }
         edit_data2 = {
             "team_name": "edit 2",

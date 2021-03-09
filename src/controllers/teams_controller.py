@@ -41,7 +41,7 @@ def get_public_teams():
             if i + 1 not in indices:
                 team["team_pokemon"].insert(i, None)
 
-    return render_template("team_list.html", teams=team_list, type="public")
+    return render_template("team_list.html", teams=team_list_dict, type="public")
 
 
 @teams.route("/teams/create", methods=["GET", "POST"])
