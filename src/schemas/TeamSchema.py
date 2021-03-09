@@ -9,7 +9,7 @@ class TeamSchema(ma.SQLAlchemyAutoSchema):
         model = Team
 
     name = ma.String(required=True, validate=Length(min=3, max=50))
-    description = ma.String(validate=Length(max=255))
+    description = ma.String(validate=Length(max=2000))
     is_private = ma.Boolean()
     owner_id = ma.Integer(required=True)
     team_pokemon = ma.Nested("TeamsPokemonSchema", many=True, only=("id", "team_index", "pokemon_id", "pokemon"))
