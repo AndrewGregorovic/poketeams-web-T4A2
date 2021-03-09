@@ -56,7 +56,14 @@ def seed_db():
     for i in range(10):
         team = Team()
         team.name = f"Team {i + 1}"
-        team.is_private = random.choice([True, False])
+
+        # Make sure there is always at least 1 public/private team
+        if i == 8:
+            team.is_private = False
+        elif i == 9:
+            team.is_private = True
+        else:
+            team.is_private = random.choice([True, False])
         owner = random.choice(users)
         team.owner_id = owner.id
         owner.teams.append(team)

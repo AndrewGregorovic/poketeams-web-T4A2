@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navigation-with-Button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     {% block title %}
 
     {% endblock %}
@@ -26,9 +26,9 @@
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link" href="#">View a Pokemon</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">View Public Teams</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('teams.get_public_teams') }}">View Public Teams</a></li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="#">View My Teams</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('teams.get_users_teams') }}">View My Teams</a></li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav ml-auto">

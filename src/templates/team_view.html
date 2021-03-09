@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>Team Name></title>
+{% endblock title %}
+
+{% block content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row" style="margin: 0px;width: auto;">
+            <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                <h2 class="text-center">{{ team.name }}</h2>
+                {% if current_user.id == team.owner_id %}
+                    <p class="text-center">{{ "Private" if team.is_private else "Public" }}</p>
+                {% else %}
+                    <p class="text-center">by {{ team.owner.username }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if team.description %}
+            <div class="row" style="margin: 0px;width: auto;">
+                <div class="col" style="padding: 0px 50px;width: auto;">
+                    <p class="text-center">{{ team.description }}</p>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row" style="margin: 0px;padding: 20px;">
+            {% for i in range(6) %}
+                <a href="" class="col" style="max-width: 32%;min-width: 400px;padding: 30px 50px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                    {% if team.team_pokemon[i] %}
+                        <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name }}</h4>
+                        {% if move_sets[i] %}
+                            {% for move in move_sets[i] %}
+                                <p style="margin-bottom: 10px;width: 300px;">Move #{{ i + 1 }}: {{ move.move.move_name }}<br></p>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: Empty</h4>
+                        <p style="margin-bottom: 10px;width: 300px;">Move #1: Empty<br></p>
+                        <p style="margin-bottom: 10px;width: 300px;">Move #2: Empty<br></p>
+                        <p style="margin-bottom: 10px;width: 300px;">Move #3: Empty<br></p>
+                        <p style="margin-bottom: 10px;width: 300px;">Move #4: Empty<br></p>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+        {% if current_user.id == team.owner_id %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+                <a href="{{ url_for('teams.edit_team_details', team_id=team['id']) }}">
+                    <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Edit Team Details</button>
+                </a>
+                <a href="{{ url_for('teams.get_users_teams') }}">
+                    <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Back</button>
+                </a>
+                <form method="POST" action="{{ url_for('teams.delete_team', team_id=team['id']) }}">
+                    {{ form.csrf_token }}
+                    <div class="submit-button" style="margin: 0px 20px;">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+                <a href="{{ url_for('teams.get_public_teams') }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

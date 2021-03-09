@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>Edit Team Details</title>
+{% endblock title %}
+
+{% block content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row d-md-flex justify-content-center justify-content-md-center" style="margin: auto;max-width: 600px;">
+            <div class="col-md-12" style="margin: 100px;border-radius: 20px;border-width: 2px;border-style: solid;padding: 50px;">
+                <form method="POST" action="{{ url_for('teams.edit_team_details', team_id=team_id) }}">
+                    {{ form.csrf_token }}
+                    <h2 style="margin-bottom: 50px;">Edit Pokemon Team</h2>
+                    <fieldset>
+                        <legend style="font-size: 16px;">Team Name</legend>
+                        {{ form.team_name }}
+                        {% if form.team_name.errors %}
+                            <div class="form-errors">
+                                {% for error in form.team_name.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </fieldset>
+                    <fieldset>
+                        <legend style="font-size: 16px;">Description (optional)</legend>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="form-errors">
+                                {% for error in form.description.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-check" style="padding-top: 0;margin-top: 20px;">
+                            {{ form.is_private }}
+                            {% if form.is_private.errors %}
+                                <div class="form-errors">
+                                    {% for error in form.is_private.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <label class="form-check-label" for="formCheck-1">Private Team</label>
+                        </div>
+                    </fieldset>
+                    <div class="text-left d-flex justify-content-center" style="margin-top: 50px;">
+                        <div class="submit-button" style="margin-right: 50px;">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                        <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                            <button class="btn btn-primary" type="button" style="margin-left: 50px;">Cancel</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

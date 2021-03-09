@@ -1,12 +1,6 @@
 from flask import url_for
 from flask_login import current_user
 
-# Flake8 ignored imports are required because of database relationships
-from src.models.Move import Move                            # noqa: F401
-from src.models.Pokemon import Pokemon                      # noqa: F401
-from src.models.PokemonMoves import Pokemon_Moves           # noqa: F401
-from src.models.Team import Team                            # noqa: F401
-from src.models.TeamsPokemon import Teams_Pokemon           # noqa: F401
 from src.models.User import User
 from tests.CustomBaseTestClass import CustomBaseTestClass
 

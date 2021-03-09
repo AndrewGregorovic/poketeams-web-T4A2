@@ -3,16 +3,22 @@ from wtforms import BooleanField, PasswordField, SubmitField, StringField, TextA
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 
+def strip_whitespace(string):
+    if isinstance(string, str):
+        string = string.strip()
+    return string
+
+
 class SignUpForm(FlaskForm):
-    username = StringField("Username", validators=[
+    username = StringField("Username", filters=[strip_whitespace], validators=[
         DataRequired(),
         Length(min=3, max=30)
     ])
-    email = StringField("Email", validators=[
+    email = StringField("Email", filters=[strip_whitespace], validators=[
         DataRequired(),
         Email()
     ])
-    password = PasswordField("Password", validators=[
+    password = PasswordField("Password", filters=[strip_whitespace], validators=[
         DataRequired(),
         Length(min=6)
     ])
@@ -30,18 +36,18 @@ class LogInForm(FlaskForm):
 
 
 class EditUserAccountForm(FlaskForm):
-    username = StringField("Username", validators=[
+    username = StringField("Username", filters=[strip_whitespace], validators=[
         Optional(),
         Length(min=3, max=30)
     ])
-    email = StringField("Email", validators=[
+    email = StringField("Email", filters=[strip_whitespace], validators=[
         Optional(),
         Email()
     ])
     current_password = PasswordField("Current Password", validators=[
         Optional()
     ])
-    new_password = PasswordField("New Password", validators=[
+    new_password = PasswordField("New Password", filters=[strip_whitespace], validators=[
         Optional(),
         Length(min=6)
     ])
@@ -53,3 +59,33 @@ class EditUserAccountForm(FlaskForm):
 
 class DeleteUserAccountForm(FlaskForm):
     submit = SubmitField("Delete Account")
+
+
+class CreateTeamForm(FlaskForm):
+    team_name = StringField("Team Name", filters=[strip_whitespace], validators=[
+        DataRequired(),
+        Length(min=3, max=50)
+    ])
+    description = TextAreaField("description", filters=[strip_whitespace], validators=[
+        Optional(),
+        Length(max=2000)
+    ])
+    is_private = BooleanField()
+    submit = SubmitField("Create Team")
+
+
+class EditTeamForm(FlaskForm):
+    team_name = StringField("Team Name", filters=[strip_whitespace], validators=[
+        Optional(),
+        Length(min=3, max=50)
+    ])
+    description = TextAreaField("description", filters=[strip_whitespace], validators=[
+        Optional(),
+        Length(max=2000)
+    ])
+    is_private = BooleanField()
+    submit = SubmitField("Apply Changes")
+
+
+class DeleteTeamForm(FlaskForm):
+    submit = SubmitField("Delete Team")
