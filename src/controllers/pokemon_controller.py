@@ -97,14 +97,15 @@ def edit_team_slot_pokemon(team_id, team_index, pokeapi_id):
 
             # Create new entry if there is no existing team_pokemon for this team id and team index,
             # otherwise update the existing entry
-            teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team_id, team_index=team_index).first()
-            if not teams_pokemon:
+            team_pokemon = Teams_Pokemon.query.filter_by(team_id=team_id, team_index=team_index).first()
+            if not team_pokemon:
                 new_team_pokemon = Teams_Pokemon()
                 new_team_pokemon.team_id = team_id
                 new_team_pokemon.team_index = team_index
                 new_team_pokemon.pokeapi_id = pokeapi_id
                 team.team_pokemon.append(new_team_pokemon)
             else:
+                teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team_id, team_index=team_index)
                 data = {
                     "team_id": team_id,
                     "team_index": team_index,
