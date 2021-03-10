@@ -74,6 +74,11 @@ def get_team(team_id):
         .filter(Teams_Pokemon.team_id == team_id)\
         .all()
 
+    # Need to query Teams_Pokemon entries so they can be ordered by team index and assigned back to the team
+    # for the pokemon to be listed in correct order in the team view
+    teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team.id).order_by(Teams_Pokemon.team_index).all()
+    team.team_pokemon = teams_pokemon
+
     # Fill any empty pokemon slots in team with None
     # Needs to be done in dict otherwise SQLAlchemy will try to insert None objects into the database
     team_dict = team_schema.dump(team)

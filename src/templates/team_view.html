@@ -38,6 +38,10 @@
                             {% for move in move_sets[i] %}
                                 <p style="margin-bottom: 10px;width: 300px;">Move #{{ i + 1 }}: {{ move.move.move_name }}<br></p>
                             {% endfor %}
+                        {% else %}
+                            {% for i in range(4) %}
+                                <p style="margin-bottom: 10px;width: 300px;">Move #{{ i + 1 }}: Empty<br></p>
+                            {% endfor %}
                         {% endif %}
                     {% else %}
                         <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: Empty</h4>
