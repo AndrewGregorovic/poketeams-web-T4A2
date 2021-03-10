@@ -20,6 +20,9 @@ teams = Blueprint("teams", __name__)
 def get_users_teams():
     team_list = Team.query.filter_by(owner_id=current_user.id).all()
 
+    for team in team_list:
+        team.team_pokemon.sort(key=lambda x: x.team_index)
+
     team_list_dict = teams_schema.dump(team_list)
     for team in team_list_dict:
         indices = [pokemon["team_index"] for pokemon in team["team_pokemon"]]
@@ -33,6 +36,9 @@ def get_users_teams():
 @teams.route("/teams", methods=["GET"])
 def get_public_teams():
     team_list = Team.query.filter_by(is_private=False).all()
+
+    for team in team_list:
+        team.team_pokemon.sort(key=lambda x: x.team_index)
 
     team_list_dict = teams_schema.dump(team_list)
     for team in team_list_dict:
@@ -67,17 +73,14 @@ def get_team(team_id):
     form = DeleteTeamForm()
     team = Team.query.get(team_id)
 
+    team.team_pokemon.sort(key=lambda x: x.team_index)
+
     # Need to query pokemon moves separately
     query_moves = db.session.query(Teams_Pokemon, Pokemon_Moves)\
         .join(Pokemon_Moves, Teams_Pokemon.id == Pokemon_Moves.team_pokemon_id)\
         .order_by(Teams_Pokemon.team_index, Pokemon_Moves.pokemon_move_index)\
         .filter(Teams_Pokemon.team_id == team_id)\
         .all()
-
-    # Need to query Teams_Pokemon entries so they can be ordered by team index and assigned back to the team
-    # for the pokemon to be listed in correct order in the team view
-    teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team.id).order_by(Teams_Pokemon.team_index).all()
-    team.team_pokemon = teams_pokemon
 
     # Fill any empty pokemon slots in team with None
     # Needs to be done in dict otherwise SQLAlchemy will try to insert None objects into the database
