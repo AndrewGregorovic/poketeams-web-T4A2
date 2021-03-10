@@ -6,55 +6,124 @@
 
 {% block content %}
     <div class="container" style="width: auto;max-width: none;padding: 0px;">
-        <div class="row" style="margin: 0px;width: auto;">
-            <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
-                <h2 class="text-center">Team Name</h2>
-                <p class="text-center">Slot #</p>
+        {% if type == "pokedex" %}
+            <div class="row" style="margin: 0px;width: auto;">
+                <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                    <h2 class="text-center">Pokedex Entry</h2>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="row" style="margin: 0px;width: auto;">
+                <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                    <h2 class="text-center">{{ team.name }}</h2>
+                    <p class="text-center">Slot {{ team_index }}</p>
+                </div>
+            </div>
+        {% endif %}
         <div class="row" style="margin: 0px;">
             <div class="col-sm-12 col-md-6 d-sm-flex justify-content-sm-center align-items-sm-center" style="padding: 0px;">
-                <img style="width: 400px;height: 400px;">
+                <img src="{{ data[0]['sprites']['front_default'] }}" style="width: 400px;height: 400px;">
             </div>
             <div class="col-md-6" style="padding: 50px;">
-                <p>Name:</p>
-                <p>Pokedex ID:</p>
-                <p>Height:</p>
-                <p>Weight:</p>
+                <p>Name: {{ data[0]["name"].capitalize() }}</p>
+                <p>Pokedex ID: {{ data[0]["id"] }}</p>
+                <p>Height: {{ data[0]["height"] }}</p>
+                <p>Weight: {{ data[0]["weight"] }}</p>
                 <p style="margin-bottom: 0px;">Types:</p>
-                <p style="margin-left: 20px;">- Normal</p>
-                <p style="margin-bottom: 0px;">Abilities:</p>
-                <p style="margin-left: 20px;">- Normal</p>
+                {% for type in data[0]["types"] %}
+                    <p style="margin-bottom: 0px;margin-left: 20px;">- {{ type["type"]["name"].capitalize() }}</p>
+                {% endfor %}
+                <p style="margin-bottom: 0px;margin-top: 16px;">Abilities:</p>
+                {% for ability in data[1] %}
+                    <p style="margin-bottom: 0px;margin-left: 20px;">- {{ ability["name"].capitalize() }}</p>
+                    {% for entry in ability["effect_entries"] %}
+                        {% if entry["language"]["name"] == "en" %}
+                            <p style="margin-bottom: 0px;margin-left: 50px;">{{ entry["short_effect"] }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
             </div>
         </div>
-        <p class="text-center" style="margin-bottom: 0px;margin-top: 20px;">Learned Moves</p>
-        <div class="row d-sm-flex d-md-flex justify-content-sm-center justify-content-md-center" style="margin: 0px;padding: 0;">
-            <a href="{{ url_for('moves.view_pokemon_move', team_id=team_id, team_index=team_index, pokemon_move_index=) }}" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
-                <p style="width: 310px;margin: 0px;">Move #1: Menacing Moonraze Maelstrom<br></p>
-            </a>
-            <div class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
-                <p style="width: 310px;margin: 0px;">Move #1: Menacing Moonraze Maelstrom<br></p>
+        {% if type == "pokedex" %}
+            <div class="row" style="margin: 0px;">
+                <div class="col" style="padding-right: 40px;padding-left: 40px;padding-bottom: 40px;">
+                    <div role="tablist" id="accordion-1">
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0 text-center"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Learnable Moves</a></h5>
+                            </div>
+                            <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-horizontal d-sm-flex flex-wrap justify-content-sm-center">
+                                        {% for move in data[0]["moves"] %}
+                                            <li class="list-group-item" style="max-width: 150px;width: 150px;font-size: 12px;padding: 10px;min-width: 150px;border-radius: 0px;border: 1px solid rgb(0,0,0) ;">
+                                                <span style="width: 150px;max-width: 200px;font-size: 12px;">{{ move["move"]["name"].capitalize() }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
-                <p style="width: 310px;margin: 0px;">Move #1: Menacing Moonraze Maelstrom<br></p>
+        {% elif type == "team" %}
+            <p class="text-center" style="margin-bottom: 20px;margin-top: 20px;">Learned Moves:</p>
+            <div class="row d-sm-flex d-md-flex justify-content-sm-center justify-content-md-center" style="margin: 0px;padding: 0;">
+                {% for i in range(4) %}
+                    {% if moves[i] %}
+                        <a href="{{ url_for('moves.view_pokemon_move', team_id=team_id, team_index=team_index, pokemon_move_index=moves[i].pokemon_move_index) }}" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ moves[i].pokemon_move_index }}: {{ moves[i].move.move_name }}<br></p>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('moves.view_pokemon_move', team_id=team_id, team_index=team_index, pokemon_move_index=i+1) }}" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ i + 1 }}: Empty<br></p>
+                        </a>
+                    {% endif %}
+                {% endfor %}
             </div>
-            <div class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
-                <p style="width: 310px;margin: 0px;">Move #1: Menacing Moonraze Maelstrom<br></p>
+        {% endif %}
+        {% if type == "pokedex" %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+                <a href="{{ url_for('pokemon.get_view_pokemon_list') }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
             </div>
-        </div>
-        <div class="d-flex justify-content-center">
-            <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
-                <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Change Pokemon</button>
-            </a>
-            <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
-                <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Back</button>
-            </a>
-            <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Remove Pokemon</button>
-        </div>
-        <div class="d-flex justify-content-center">
-            <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
-                <button class="btn btn-primary" type="button">Back</button>
-            </a>
-        </div>
+        {% elif type == "team" %}
+            {% if current_user.id == team.owner_id %}
+                <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                    <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                        <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Change Pokemon</button>
+                    </a>
+                    <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                        <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Back</button>
+                    </a>
+                    <form method="POST" action="{{ url_for('pokemon.delete_team_slot_pokemon', team_id=team_id, team_index=team_index) }}">
+                        {{ form.csrf_token }}
+                        <div class="submit-button" style="margin: 0px 20px;">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                    <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                        <button class="btn btn-primary" type="button">Back</button>
+                    </a>
+                </div>
+            {% endif %}        
+        {% else %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+                <form method="POST" action="{{ url_for('pokemon.edit_team_slot_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=pokeapi_id) }}">
+                    {{ form.csrf_token }}
+                    <div class="submit-button" style="margin-right: 50px;">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+                <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                    <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                </a>
+            </div>
+        {% endif %}
     </div>
 {% endblock content%}
