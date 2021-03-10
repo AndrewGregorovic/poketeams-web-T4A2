@@ -32,17 +32,22 @@ def view_team_pokemon(team_id, team_index):
     form = RemovePokemonForm()
     team = Team.query.get(team_id)
     team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
-    pokemon_api_data = Pokemon.get_pokemon_data(team_pokemon.pokeapi_id)
+    if team_pokemon:
+        pokemon_api_data = Pokemon.get_pokemon_data(team_pokemon.pokeapi_id)
 
-    move_set = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all()
-    move_set_dict = pokemon_moves_schema.dump(move_set)
-    indices = [move.pokemon_move_index for move in move_set]
-    for i in range(4):
-        if i + 1 not in indices:
-            move_set_dict.insert(i, None)
+        move_set = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all()
+        move_set_dict = pokemon_moves_schema.dump(move_set)
+        indices = [move.pokemon_move_index for move in move_set]
+        for i in range(4):
+            if i + 1 not in indices:
+                move_set_dict.insert(i, None)
 
-    ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
-    return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], form=form, moves=move_set_dict, team=team, team_id=team_id, team_index=team_index, type="team")
+        ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
+        data = [pokemon_api_data, ability_data]
+    else:
+        data = None
+        move_set_dict = None
+    return render_template("pokemon_view.html", data=data, form=form, moves=move_set_dict, team=team, team_id=team_id, team_index=team_index, type="team")
 
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/select", methods=["GET"])
@@ -92,13 +97,13 @@ def edit_team_slot_pokemon(team_id, team_index, pokeapi_id):
 
             # Create new entry if there is no existing team_pokemon for this team id and team index,
             # otherwise update the existing entry
-            teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team_id, team_index=team_index)
+            teams_pokemon = Teams_Pokemon.query.filter_by(team_id=team_id, team_index=team_index).first()
             if not teams_pokemon:
                 new_team_pokemon = Teams_Pokemon()
                 new_team_pokemon.team_id = team_id
                 new_team_pokemon.team_index = team_index
                 new_team_pokemon.pokeapi_id = pokeapi_id
-                team.team_pokemon.insert(new_team_pokemon)
+                team.team_pokemon.append(new_team_pokemon)
             else:
                 data = {
                     "team_id": team_id,

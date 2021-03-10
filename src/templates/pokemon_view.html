@@ -20,31 +20,47 @@
                 </div>
             </div>
         {% endif %}
-        <div class="row" style="margin: 0px;">
-            <div class="col-sm-12 col-md-6 d-sm-flex justify-content-sm-center align-items-sm-center" style="padding: 0px;">
-                <img src="{{ data[0]['sprites']['front_default'] }}" style="width: 400px;height: 400px;">
-            </div>
-            <div class="col-md-6" style="padding: 50px;">
-                <p>Name: {{ data[0]["name"].capitalize() }}</p>
-                <p>Pokedex ID: {{ data[0]["id"] }}</p>
-                <p>Height: {{ data[0]["height"] }}</p>
-                <p>Weight: {{ data[0]["weight"] }}</p>
-                <p style="margin-bottom: 0px;">Types:</p>
-                {% for type in data[0]["types"] %}
-                    <p style="margin-bottom: 0px;margin-left: 20px;">- {{ type["type"]["name"].capitalize() }}</p>
-                {% endfor %}
-                <p style="margin-bottom: 0px;margin-top: 16px;">Abilities:</p>
-                {% for ability in data[1] %}
-                    <p style="margin-bottom: 0px;margin-left: 20px;">- {{ ability["name"].capitalize() }}</p>
-                    {% for entry in ability["effect_entries"] %}
-                        {% if entry["language"]["name"] == "en" %}
-                            <p style="margin-bottom: 0px;margin-left: 50px;">{{ entry["short_effect"] }}</p>
-                        {% endif %}
+        {% if data %}
+            <div class="row" style="margin: 0px;">
+                <div class="col-sm-12 col-md-6 d-sm-flex justify-content-sm-center align-items-sm-center" style="padding: 0px;">
+                    <img src="{{ data[0]['sprites']['front_default'] }}" style="width: 400px;height: 400px;">
+                </div>
+                <div class="col-md-6" style="padding: 50px;">
+                    <p>Name: {{ data[0]["name"].capitalize() }}</p>
+                    <p>Pokedex ID: {{ data[0]["id"] }}</p>
+                    <p>Height: {{ data[0]["height"]/10 }} m</p>
+                    <p>Weight: {{ data[0]["weight"]/10 }} kg</p>
+                    <p style="margin-bottom: 0px;">Types:</p>
+                    {% for type in data[0]["types"] %}
+                        <p style="margin-bottom: 0px;margin-left: 20px;">- {{ type["type"]["name"].capitalize() }}</p>
                     {% endfor %}
-                {% endfor %}
+                    <p style="margin-bottom: 0px;margin-top: 16px;">Abilities:</p>
+                    {% for ability in data[1] %}
+                        <p style="margin-bottom: 0px;margin-left: 20px;">- {{ ability["name"].capitalize() }}</p>
+                        {% for entry in ability["effect_entries"] %}
+                            {% if entry["language"]["name"] == "en" %}
+                                <p style="margin-bottom: 0px;margin-left: 50px;">{{ entry["short_effect"] }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        {% if type == "pokedex" %}
+        {% else %}
+            <div class="row d-lg-flex justify-content-lg-center" style="margin: 0px;">
+                <div class="col-12" style="padding: 50px;width: 600px;max-width: 600px;min-width: 400px;">
+                    <p style="width: 500px;">Name: Empty</p>
+                    <p style="width: 500px;">Pokedex ID: ???</p>
+                    <p style="width: 500px;">Height: ???</p>
+                    <p style="width: 500px;">Weight: ???</p>
+                    <p style="margin-bottom: 0px;width: 500px;">Types:</p>
+                    <p style="margin-bottom: 0px;margin-left: 20px;width: 480px;">- ???</p>
+                    <p style="margin-bottom: 0px;margin-top: 16px;width: 500px;">Abilities:</p>
+                    <p style="margin-bottom: 0px;margin-left: 20px;width: 480px;">- ???</p>
+                    <p style="margin-bottom: 0px;margin-left: 50px;width: 450px;">??????</p>
+                </div>
+            </div>
+        {% endif %}
+        {% if type == "pokedex" or type == "team-selected" %}
             <div class="row" style="margin: 0px;">
                 <div class="col" style="padding-right: 40px;padding-left: 40px;padding-bottom: 40px;">
                     <div role="tablist" id="accordion-1">
@@ -75,10 +91,14 @@
                         <a href="{{ url_for('moves.view_pokemon_move', team_id=team_id, team_index=team_index, pokemon_move_index=moves[i].pokemon_move_index) }}" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
                             <p class="text-center" style="margin: 0px;">Move #{{ moves[i].pokemon_move_index }}: {{ moves[i].move.move_name }}<br></p>
                         </a>
-                    {% else %}
+                    {% elif data and not moves[i] %}
                         <a href="{{ url_for('moves.view_pokemon_move', team_id=team_id, team_index=team_index, pokemon_move_index=i+1) }}" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
                             <p class="text-center" style="margin: 0px;">Move #{{ i + 1 }}: Empty<br></p>
                         </a>
+                    {% elif not data %}
+                        <div class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ i + 1 }}: Empty<br></p>
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
