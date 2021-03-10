@@ -9,7 +9,9 @@
         <div class="row" style="margin: 0px;width: auto;">
             <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
                 <h2 class="text-center">Pokemon List</h2>
-                <p class="text-center">Team Name, Slot #</p>
+                {% if type == "team" %}
+                    <p class="text-center">{{ team.name }}, Slot {{ team_index }}</p>
+                {% endif %}
             </div>
         </div>
         <div class="row" style="margin: 0px;">
@@ -17,15 +19,24 @@
                 <div role="tablist" id="accordion-1">
                     <div class="card">
                         <div class="card-header" role="tab">
-                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Generation I</a></h5>
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Generation I</a></h5>
                         </div>
-                        <div class="collapse show item-1 d-flex float-right" role="tabpanel" data-parent="#accordion-1">
+                        <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
                                 <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
-                                    <div class="col" style="padding: 0px;width: 100px;min-width: 100px;max-width: 100px;margin: 10px;">
-                                        <img style="width: 100px;height: 100px;">
-                                        <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
-                                    </div>
+                                    {% for i in range(1, 152) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -36,8 +47,20 @@
                         </div>
                         <div class="collapse item-2" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(152, 252) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -48,8 +71,20 @@
                         </div>
                         <div class="collapse item-3" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(252, 387) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -60,8 +95,20 @@
                         </div>
                         <div class="collapse item-4" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(387, 494) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -72,8 +119,20 @@
                         </div>
                         <div class="collapse item-5" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(494, 650) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -84,8 +143,20 @@
                         </div>
                         <div class="collapse item-6" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(650, 722) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -96,8 +167,20 @@
                         </div>
                         <div class="collapse item-7" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(722, 810) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -108,8 +191,20 @@
                         </div>
                         <div class="collapse item-8" role="tabpanel" data-parent="#accordion-1">
                             <div class="card-body">
-                                <div class="col" style="padding: 0px;width: 100px;"><img style="width: 100px;height: 100px;">
-                                    <p class="text-center" style="font-size: 12px;">#555&nbsp;Fletchinder</p>
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(810, 899) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -117,6 +212,16 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-center"><button class="btn btn-primary" type="button">Back</button></div>
+        <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+            {% if type == "pokedex" %}
+                <a href="{{ url_for('auth.landing_page') }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            {% else %}
+                <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team_id, team_index=team_index) }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock content%}

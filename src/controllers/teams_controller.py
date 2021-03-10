@@ -106,7 +106,7 @@ def get_team(team_id):
         if team_dict["team_pokemon"][i] is None or team_dict["team_pokemon"][i]["id"] not in team_pokemon_ids:
             move_sets_dict.insert(i, None)
 
-    return render_template("team_view.html", form=form, team=team_dict, move_sets=move_sets_dict)
+    return render_template("team_view.html", form=form, team=team_dict, team_id=team_id, move_sets=move_sets_dict)
 
 
 @teams.route("/teams/<int:team_id>/edit", methods=["GET", "POST"])
@@ -159,4 +159,4 @@ def delete_team(team_id):
             return redirect(url_for("teams.get_users_teams"))
     else:
         flash("You do not have permission to delete this team.")
-        return redirect(url_for("teams.get_team", team_id=team.id))
+        return redirect(url_for("teams.get_team", team_id=team_id))

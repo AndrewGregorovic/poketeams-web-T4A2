@@ -1,6 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
-import requests
 
 from src.forms import ConfirmForm, RemovePokemonForm
 from src.main import db
@@ -23,14 +22,17 @@ def get_view_pokemon_list():
 @pokemon.route("/view-pokemon/<int:pokeapi_id>", methods=["GET"])
 def view_selected_pokemon(pokeapi_id):
     pokemon_api_data = Pokemon.get_pokemon_data(pokeapi_id)
-    ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in api_data["abilities"]]
-    return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], type="pokedex")
+    ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
+    return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], pokeapi_id=pokeapi_id, type="pokedex")
+
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>", methods=["GET"])
 def view_team_pokemon(team_id, team_index):
-    pokemon_api_data = Pokemon.get_pokemon_data(pokeapi_id)
-    ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in api_data["abilities"]]
-    return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], type="team")
+    team = Team.query.get(team_id)
+    team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
+    pokemon_api_data = Pokemon.get_pokemon_data(team_pokemon.pokeapi_id)
+    ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
+    return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], team=team, team_id=team_id, team_index=team_index, type="team")
 
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/select", methods=["GET"])
@@ -39,7 +41,7 @@ def get_team_pokemon_list(team_id, team_index):
     team = Team.query.get(team_id)
     if current_user.id == team.owner_id:
         api_data = Pokemon.get_pokedex_list()
-        return render_template("pokemon_select.html", data=api_data, type="team")
+        return render_template("pokemon_select.html", data=api_data, team=team, team_id=team_id, team_index=team_index, type="team")
 
     flash("You do not have permission to change this pokemon.")
     return redirect(url_for("pokemon.view_team_pokemon", team_id=team_id, team_index=team_index))
@@ -51,8 +53,8 @@ def view_selected_team_pokemon(team_id, team_index, pokeapi_id):
     team = Team.query.get(team_id)
     if current_user.id == team.owner_id:
         pokemon_api_data = Pokemon.get_pokemon_data(pokeapi_id)
-        ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in api_data["abilities"]]
-        return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], type="team_selected")
+        ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
+        return render_template("pokemon_view.html", data=[pokemon_api_data, ability_data], team_id=team_id, team_index=team_index, pokeapi_id=pokeapi_id, type="team_selected")
 
     flash("You do not have permission to change this pokemon.")
     return redirect(url_for("pokemon.view_team_pokemon", team_id=team_id, team_index=team_index))
