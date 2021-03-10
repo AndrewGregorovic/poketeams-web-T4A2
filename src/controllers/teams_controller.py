@@ -159,4 +159,4 @@ def delete_team(team_id):
             return redirect(url_for("teams.get_users_teams"))
     else:
         flash("You do not have permission to delete this team.")
-        return redirect(url_for("team.get_team", team_id=team.id))
+        return redirect(url_for("teams.get_team", team_id=team.id))
