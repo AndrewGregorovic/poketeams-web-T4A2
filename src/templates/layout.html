@@ -25,7 +25,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">View a Pokemon</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pokemon.get_view_pokemon_list') }}">View a Pokemon</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('teams.get_public_teams') }}">View Public Teams</a></li>
                     {% if current_user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('teams.get_users_teams') }}">View My Teams</a></li>

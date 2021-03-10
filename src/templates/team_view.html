@@ -31,7 +31,7 @@
         {% endif %}
         <div class="row" style="margin: 0px;padding: 20px;">
             {% for i in range(6) %}
-                <a href="" class="col" style="max-width: 32%;min-width: 400px;padding: 30px 50px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team.id, team_index=i+1) }}" class="col" style="max-width: 32%;min-width: 400px;padding: 30px 50px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
                     {% if team.team_pokemon[i] %}
                         <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name }}</h4>
                         {% if move_sets[i] %}
@@ -51,13 +51,13 @@
         </div>
         {% if current_user.id == team.owner_id %}
             <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
-                <a href="{{ url_for('teams.edit_team_details', team_id=team['id']) }}">
+                <a href="{{ url_for('teams.edit_team_details', team_id=team.id) }}">
                     <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Edit Team Details</button>
                 </a>
                 <a href="{{ url_for('teams.get_users_teams') }}">
                     <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Back</button>
                 </a>
-                <form method="POST" action="{{ url_for('teams.delete_team', team_id=team['id']) }}">
+                <form method="POST" action="{{ url_for('teams.delete_team', team_id=team.id) }}">
                     {{ form.csrf_token }}
                     <div class="submit-button" style="margin: 0px 20px;">
                         {{ form.submit(class="btn btn-primary") }}
