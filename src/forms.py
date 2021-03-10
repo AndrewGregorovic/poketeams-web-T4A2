@@ -89,3 +89,11 @@ class EditTeamForm(FlaskForm):
 
 class DeleteTeamForm(FlaskForm):
     submit = SubmitField("Delete Team")
+
+
+class ConfirmForm(FlaskForm):
+    submit = SubmitField("Confirm")
+
+
+class RemovePokemonForm(FlaskForm):
+    submit = SubmitField("Remove Pokemon")
