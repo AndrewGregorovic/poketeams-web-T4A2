@@ -81,6 +81,14 @@ class CustomBaseTestClass(TestCase):
                 return random.choice(team.team_pokemon)
 
     @classmethod
+    def get_empty_pokemon_slot(cls):
+        teams = Team.query.all()
+        for team in teams:
+            if len(team.team_pokemon) < 6:
+                empty_pokemon = {1, 2, 3, 4, 5, 6} - {pokemon.team_index for pokemon in team.team_pokemon}
+                return team, next(iter(empty_pokemon))
+
+    @classmethod
     def get_empty_move_slot(cls):
         teams = Team.query.all()
         for team in teams:
