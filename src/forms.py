@@ -100,4 +100,4 @@ class RemovePokemonForm(FlaskForm):
 
 
 class RemoveMoveForm(FlaskForm):
-    submit = SubmitField("Remove Pokemon")
+    submit = SubmitField("Remove Move")

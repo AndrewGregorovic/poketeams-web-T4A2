@@ -20,9 +20,11 @@ def view_pokemon_move(team_id, team_index, pokemon_move_index):
     team = Team.query.get(team_id)
     team_pokemon = Team.get_team_pokemon(team, team_index)
     move = Pokemon_Moves.query.get((team_pokemon.id, team_pokemon.pokeapi_id, pokemon_move_index))
+    if not move:
+        return redirect(url_for("moves.get_pokemon_move_list", team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index))
+
     api_data = Move.get_move_data(move.move_id)
     return render_template("move_view.html", form=form, data=api_data, team=team, team_pokemon=team_pokemon, team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index, type="team")
-
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select", methods=["GET"])
 @login_required
@@ -31,10 +33,11 @@ def get_pokemon_move_list(team_id, team_index, pokemon_move_index):
     if current_user.id == team.owner_id:
         team_pokemon = Team.get_team_pokemon(team, team_index)
 
+        current_move = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokemon_move_index=pokemon_move_index).first()
         move_set = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all()
 
         move_list = Move.get_move_list(Pokemon.get_pokemon_data(team_pokemon.pokeapi_id), move_set)
-        return render_template("move_select.html", move_list=move_list, team=team, team_pokemon=team_pokemon, team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index)
+        return render_template("move_select.html", move_list=move_list, team=team, team_pokemon=team_pokemon, current_move=current_move, team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index)
     else:
         flash("You do not have permission to change this move.")
         return redirect(url_for("moves.view_pokemon_move", team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index))
@@ -78,17 +81,19 @@ def edit_pokemon_move_slot(team_id, team_index, pokemon_move_index, move_id):
             # otherwise update the existing entry
             pokemon_move = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokeapi_id=team_pokemon.pokeapi_id, pokemon_move_index=pokemon_move_index).first()
             if not pokemon_move:
-                new_pokemon_move = Teams_Pokemon()
+                new_pokemon_move = Pokemon_Moves()
                 new_pokemon_move.team_pokemon_id = team_pokemon.id
                 new_pokemon_move.pokeapi_id = team_pokemon.pokeapi_id
                 new_pokemon_move.pokemon_move_index = pokemon_move_index
+                new_pokemon_move.move_id = move_id
                 team_pokemon.pokemon_moves.append(new_pokemon_move)
             else:
                 pokemon_moves = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokeapi_id=team_pokemon.pokeapi_id, pokemon_move_index=pokemon_move_index)
                 data = {
                     "team_pokemon_id": team_pokemon.id,
                     "pokeapi_id": team_pokemon.pokeapi_id,
-                    "pokemon_move_index": pokemon_move_index
+                    "pokemon_move_index": pokemon_move_index,
+                    "move_id": move_id
                 }
 
                 pokemon_moves.update(pokemon_move_schema.load(data, partial=True))
