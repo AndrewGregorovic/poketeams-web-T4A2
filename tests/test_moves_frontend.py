@@ -7,7 +7,7 @@ from tests.CustomBaseTestClass import CustomBaseTestClass
 from tests.helper_function import captured_templates
 
 
-class TestTeamsFrontend(CustomBaseTestClass):
+class TestMovesFrontend(CustomBaseTestClass):
     """
     Test cases to test the frontend template rendering and redirects of the pokemon controller endpoints.
     """
@@ -127,7 +127,7 @@ class TestTeamsFrontend(CustomBaseTestClass):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(template.name, "pokemon_view.html")
 
-    def test_delete_team_slot_pokemon(self):
+    def test_delete_pokemon_move_slot(self):
         """
         Tests that the delete pokemon move slot endpoint correctly redirects and renders the pokemon view page.
         """
