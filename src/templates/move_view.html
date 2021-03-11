@@ -28,7 +28,9 @@
                 {% else %}
                     {% set effect_chance = "" %}
                 {% endif %}
-                <p style="width: 500px;">Effect: {{ data["effect_entries"][0]["effect"].replace("$effect_chance%", effect_chance) }}</p>
+                {% if data["effect_entries"] != [] %}
+                    <p style="width: 500px;">Effect: {{ data["effect_entries"][0]["effect"].replace("$effect_chance%", effect_chance) }}</p>
+                {% endif %}
             </div>
         </div>
         {% if type == "team" %}

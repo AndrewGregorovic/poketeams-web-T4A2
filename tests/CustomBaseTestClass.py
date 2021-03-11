@@ -7,6 +7,7 @@ from flask_login import current_user, logout_user
 
 from src.main import create_app, db
 from src.models.Team import Team
+from src.models.PokemonMoves import Pokemon_Moves
 
 
 class CustomBaseTestClass(TestCase):
@@ -65,8 +66,46 @@ class CustomBaseTestClass(TestCase):
                 return team
 
     @classmethod
+    def get_team_at_least_one_pokemon_public(cls):
+        while True:
+            team = random.choice(Team.query.filter_by(is_private=False).all())
+            if len(team.team_pokemon) >= 1:
+                return team
+
+    @classmethod
     def get_random_team_pokemon(cls, team):
         if len(team.team_pokemon) == 1:
             return team.team_pokemon[0]
         else:
             return random.choice(team.team_pokemon)
+
+    @classmethod
+    def get_empty_move_slot(cls):
+        while True:
+            team = random.choice(Team.query.all())
+            if len(team.team_pokemon) >= 1:
+                for pokemon in team.team_pokemon:
+                    moves = Pokemon_Moves.query.filter_by(team_pokemon_id=pokemon.id).all()
+                    if len(moves) < 4:
+                        empty_moves = {1, 2, 3, 4} - {move.pokemon_move_index for move in moves}
+                        return team, pokemon, next(iter(empty_moves))
+
+    @classmethod
+    def get_move_slot_public(cls):
+        while True:
+            team = random.choice(Team.query.filter_by(is_private=False).all())
+            if len(team.team_pokemon) >= 1:
+                for pokemon in team.team_pokemon:
+                    moves = Pokemon_Moves.query.filter_by(team_pokemon_id=pokemon.id).all()
+                    if len(moves) > 0:
+                        return team, pokemon, moves[0]
+
+    @classmethod
+    def get_move_slot_private(cls):
+        while True:
+            team = random.choice(Team.query.filter_by(is_private=True).all())
+            if len(team.team_pokemon) >= 1:
+                for pokemon in team.team_pokemon:
+                    moves = Pokemon_Moves.query.filter_by(team_pokemon_id=pokemon.id).all()
+                    if len(moves) > 0:
+                        return team, pokemon, moves[0]
