@@ -21,6 +21,8 @@ class CustomBaseTestClass(TestCase):
     def setUpClass(cls):
         if os.environ.get("FLASK_ENV") != "workflow":
             os.environ["FLASK_ENV"] = "testing"
+        else:
+            os.environ["DB_TEST_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/poketeams_test"
         cls.app = create_app()
         cls.app_context = cls.app.app_context()
         cls.app_context.push()

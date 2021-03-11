@@ -45,8 +45,11 @@ class TestingConfig(Config):
 
 class WorkflowConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     WTF_CSRF_ENABLED = False
+
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        return get_env_var("DB_TEST_URI")
 
 
 environment = get_env_var("FLASK_ENV")
