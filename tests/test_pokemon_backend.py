@@ -61,7 +61,7 @@ class TestTeamsBackend(CustomBaseTestClass):
         """
 
         with self.client as c:
-            team = random.choice(Team.query.all())
+            team = self.get_team_at_least_one_pokemon()
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
 
             team_pokemon = self.get_random_team_pokemon(team)
