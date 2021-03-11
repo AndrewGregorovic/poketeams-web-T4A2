@@ -7,7 +7,6 @@ from src.models.Move import Move
 from src.models.Pokemon import Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
 from src.models.Team import Team
-from src.models.TeamsPokemon import Teams_Pokemon
 from src.schemas.PokemonMovesSchema import pokemon_move_schema
 
 
@@ -25,6 +24,7 @@ def view_pokemon_move(team_id, team_index, pokemon_move_index):
 
     api_data = Move.get_move_data(move.move_id)
     return render_template("move_view.html", form=form, data=api_data, team=team, team_pokemon=team_pokemon, team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index, type="team")
+
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select", methods=["GET"])
 @login_required
