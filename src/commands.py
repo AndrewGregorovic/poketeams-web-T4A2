@@ -93,8 +93,9 @@ def seed_db():
 
     move_list = []
     for team in team_list:
+        number_of_moves = random.randint(0, 4)
         for team_pokemon in team.team_pokemon:
-            for i in range(4):
+            for i in range(number_of_moves):
                 move = Move()
                 move.move_id = random.randint(1, 826)
                 move.move_name = f"Random Move {i + 1}"

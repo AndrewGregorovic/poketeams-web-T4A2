@@ -13,3 +13,9 @@ class Team(db.Model):
 
     def __repr__(self):
         return f"<Team {self.id}: {self.name}>"
+
+    @staticmethod
+    def get_team_pokemon(team, team_index):
+        for pokemon in team.team_pokemon:
+            if pokemon.team_index == team_index:
+                return pokemon

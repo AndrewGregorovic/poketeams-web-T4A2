@@ -33,14 +33,18 @@
             {% for i in range(6) %}
                 <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team.id, team_index=i+1) }}" class="col" style="max-width: 32%;min-width: 400px;padding: 30px 50px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
                     {% if team.team_pokemon[i] %}
-                        <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name }}</h4>
+                        <h4 class="text-left" style="margin-bottom: 20px;width: 300px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name.capitalize() }}</h4>
                         {% if move_sets[i] %}
-                            {% for move in move_sets[i] %}
-                                <p style="margin-bottom: 10px;width: 300px;">Move #{{ i + 1 }}: {{ move.move.move_name }}<br></p>
+                            {% for j in range(4) %}
+                                {% if move_sets[i][j] %}
+                                    <p style="margin-bottom: 10px;width: 300px;">Move #{{ move_sets[i][j].pokemon_move_index }}: {{ move_sets[i][j].move.move_name.capitalize() }}<br></p>
+                                {% else %}
+                                    <p style="margin-bottom: 10px;width: 300px;">Move #{{ j + 1 }}: Empty<br></p>
+                                {% endif %}
                             {% endfor %}
                         {% else %}
-                            {% for i in range(4) %}
-                                <p style="margin-bottom: 10px;width: 300px;">Move #{{ i + 1 }}: Empty<br></p>
+                            {% for j in range(4) %}
+                                <p style="margin-bottom: 10px;width: 300px;">Move #{{ j + 1 }}: Empty<br></p>
                             {% endfor %}
                         {% endif %}
                     {% else %}

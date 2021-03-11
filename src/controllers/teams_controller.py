@@ -96,11 +96,11 @@ def get_team(team_id):
 
     # Fill any empty move slots with None, again needs to be done as a dict
     move_sets_dict = [pokemon_moves_schema.dump(move_set) for move_set in move_sets]
-    for move_set in move_sets:
-        indices = [move.pokemon_move_index for move in move_set]
+    for move_set in move_sets_dict:
+        indices = [move["pokemon_move_index"] for move in move_set]
         for i in range(4):
             if i + 1 not in indices:
-                move_sets_dict.insert(i, None)
+                move_set.insert(i, None)
 
     # team_pokemon_ids = []
     # for move_set in move_sets:

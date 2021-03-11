@@ -7,6 +7,8 @@ from flask_login import current_user, logout_user
 
 from src.main import create_app, db
 from src.models.Team import Team
+from src.models.TeamsPokemon import Teams_Pokemon
+from src.models.PokemonMoves import Pokemon_Moves
 
 
 class CustomBaseTestClass(TestCase):
@@ -19,6 +21,8 @@ class CustomBaseTestClass(TestCase):
     def setUpClass(cls):
         if os.environ.get("FLASK_ENV") != "workflow":
             os.environ["FLASK_ENV"] = "testing"
+        else:
+            os.environ["DB_TEST_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/poketeams_test"
         cls.app = create_app()
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
@@ -34,6 +38,7 @@ class CustomBaseTestClass(TestCase):
     def tearDownClass(cls):
         if current_user.is_authenticated:
             logout_user()
+        db.session.close()
         db.session.remove()
         runner = cls.app.test_cli_runner()
         runner.invoke(args=["db-custom", "drop"])
@@ -58,15 +63,46 @@ class CustomBaseTestClass(TestCase):
         return cls.client.get(url_for("auth.logout"), follow_redirects=True)
 
     @classmethod
-    def get_team_at_least_one_pokemon(cls):
-        while True:
-            team = random.choice(Team.query.all())
-            if len(team.team_pokemon) >= 1:
-                return team
+    def get_random_team_pokemon(cls):
+        teams = Team.query.all()
+        for team in teams:
+            if len(team.team_pokemon) == 1:
+                return team.team_pokemon[0]
+            elif len(team.team_pokemon) > 1:
+                return random.choice(team.team_pokemon)
 
     @classmethod
-    def get_random_team_pokemon(cls, team):
-        if len(team.team_pokemon) == 1:
-            return team.team_pokemon[0]
-        else:
-            return random.choice(team.team_pokemon)
+    def get_random_team_pokemon_public(cls):
+        teams = Team.query.filter_by(is_private=False).all()
+        for team in teams:
+            if len(team.team_pokemon) == 1:
+                return team.team_pokemon[0]
+            elif len(team.team_pokemon) > 1:
+                return random.choice(team.team_pokemon)
+
+    @classmethod
+    def get_empty_pokemon_slot(cls):
+        teams = Team.query.all()
+        for team in teams:
+            if len(team.team_pokemon) < 6:
+                empty_pokemon = {1, 2, 3, 4, 5, 6} - {pokemon.team_index for pokemon in team.team_pokemon}
+                return team, next(iter(empty_pokemon))
+
+    @classmethod
+    def get_empty_move_slot(cls):
+        teams = Team.query.all()
+        for team in teams:
+            if len(team.team_pokemon) >= 1:
+                for pokemon in team.team_pokemon:
+                    moves = Pokemon_Moves.query.filter_by(team_pokemon_id=pokemon.id).all()
+                    if len(moves) < 4:
+                        empty_moves = {1, 2, 3, 4} - {move.pokemon_move_index for move in moves}
+                        return pokemon, next(iter(empty_moves))
+
+    @classmethod
+    def get_move_slot_public(cls):
+        moves = Pokemon_Moves.query.all()
+        for move in moves:
+            team_pokemon = Teams_Pokemon.query.filter_by(id=move.team_pokemon_id).first()
+            if team_pokemon.team.is_private is False:
+                return team_pokemon, move
