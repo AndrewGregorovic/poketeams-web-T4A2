@@ -174,7 +174,7 @@ class TestTeamsFrontend(CustomBaseTestClass):
                 self.assertIsInstance(context["form"], EditTeamForm)
 
             # Test status code for redirect
-            response = c.post(url_for("teams.create_team"), data=edit_data1)
+            response = c.post(url_for("teams.edit_team_details", team_id=team.id), data=edit_data1)
 
             self.assertEqual(response.status_code, 302)
 

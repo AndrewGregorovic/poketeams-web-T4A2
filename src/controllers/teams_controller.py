@@ -20,6 +20,9 @@ teams = Blueprint("teams", __name__)
 def get_users_teams():
     team_list = Team.query.filter_by(owner_id=current_user.id).all()
 
+    for team in team_list:
+        team.team_pokemon.sort(key=lambda x: x.team_index)
+
     team_list_dict = teams_schema.dump(team_list)
     for team in team_list_dict:
         indices = [pokemon["team_index"] for pokemon in team["team_pokemon"]]
@@ -33,6 +36,9 @@ def get_users_teams():
 @teams.route("/teams", methods=["GET"])
 def get_public_teams():
     team_list = Team.query.filter_by(is_private=False).all()
+
+    for team in team_list:
+        team.team_pokemon.sort(key=lambda x: x.team_index)
 
     team_list_dict = teams_schema.dump(team_list)
     for team in team_list_dict:
@@ -66,6 +72,8 @@ def create_team():
 def get_team(team_id):
     form = DeleteTeamForm()
     team = Team.query.get(team_id)
+
+    team.team_pokemon.sort(key=lambda x: x.team_index)
 
     # Need to query pokemon moves separately
     query_moves = db.session.query(Teams_Pokemon, Pokemon_Moves)\
@@ -106,7 +114,7 @@ def get_team(team_id):
         if team_dict["team_pokemon"][i] is None or team_dict["team_pokemon"][i]["id"] not in team_pokemon_ids:
             move_sets_dict.insert(i, None)
 
-    return render_template("team_view.html", form=form, team=team_dict, move_sets=move_sets_dict)
+    return render_template("team_view.html", form=form, team=team_dict, team_id=team_id, move_sets=move_sets_dict)
 
 
 @teams.route("/teams/<int:team_id>/edit", methods=["GET", "POST"])
@@ -159,4 +167,4 @@ def delete_team(team_id):
             return redirect(url_for("teams.get_users_teams"))
     else:
         flash("You do not have permission to delete this team.")
-        return redirect(url_for("team.get_team", team_id=team.id))
+        return redirect(url_for("teams.get_team", team_id=team_id))

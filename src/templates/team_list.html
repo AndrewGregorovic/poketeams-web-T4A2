@@ -57,7 +57,7 @@
         {% endif %}
         <div class="row row-cols-4" style="margin: 0px;padding: 50px;">
             {% for team in teams %}
-                <a href="{{ url_for('teams.get_team', team_id=team['id']) }}" class="col" style="max-width: 23%;margin: auto;margin-bottom: 30px;min-width: 300px;padding: 10px;border-radius: 10px;border-width: 2px;border-style: solid;">
+                <a href="{{ url_for('teams.get_team', team_id=team.id) }}" class="col" style="max-width: 23%;margin: auto;margin-bottom: 30px;min-width: 300px;padding: 10px;border-radius: 10px;border-width: 2px;border-style: solid;">
                     <h4 class="text-center" style="margin-top: 10px;">{{ team.name }}</h4>
                     {% if type == "personal" %}
                         <p class="text-center" style="margin-bottom: 20px;">{{ "Private" if team.is_private else "Public" }}</p>

@@ -73,7 +73,7 @@ def seed_db():
 
     pokemon_list = []
     for team in team_list:
-        number_of_pokemon = random.randint(0, 6)
+        number_of_pokemon = random.randint(1, 6)
         for i in range(number_of_pokemon):
             pokemon = Pokemon()
             pokemon.pokemon_id = random.randint(1, 898)

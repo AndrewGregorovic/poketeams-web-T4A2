@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>Select a Pokemon</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        <div class="row" style="margin: 0px;width: auto;">
+            <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                <h2 class="text-center">Pokemon List</h2>
+                {% if type == "team" %}
+                    <p class="text-center">{{ team.name }}, Slot {{ team_index }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row" style="margin: 0px;">
+            <div class="col" style="padding-right: 40px;padding-left: 40px;padding-bottom: 40px;">
+                <div role="tablist" id="accordion-1">
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Generation I</a></h5>
+                        </div>
+                        <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(1, 152) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-2" href="#accordion-1 .item-2">Generation II</a></h5>
+                        </div>
+                        <div class="collapse item-2" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(152, 252) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-3" href="#accordion-1 .item-3">Generation III</a></h5>
+                        </div>
+                        <div class="collapse item-3" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(252, 387) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-4" href="#accordion-1 .item-4">Generation IV</a></h5>
+                        </div>
+                        <div class="collapse item-4" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(387, 494) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-5" href="#accordion-1 .item-5">Generation V</a></h5>
+                        </div>
+                        <div class="collapse item-5" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(494, 650) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-6" href="#accordion-1 .item-6">Generation VI</a></h5>
+                        </div>
+                        <div class="collapse item-6" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(650, 722) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-7" href="#accordion-1 .item-7">Generation VII</a></h5>
+                        </div>
+                        <div class="collapse item-7" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(722, 810) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-8" href="#accordion-1 .item-8">Generation VIII</a></h5>
+                        </div>
+                        <div class="collapse item-8" role="tabpanel" data-parent="#accordion-1">
+                            <div class="card-body">
+                                <div class="row d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin: -10px;">
+                                    {% for i in range(810, 899) %}
+                                        {% if type == "pokedex" %}
+                                            <a href="{{ url_for('pokemon.view_selected_pokemon', pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('pokemon.view_selected_team_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=i) }}" class="col" style="padding: 0px;width: 105px;min-width: 105px;max-width: 105px;margin: 10px;">
+                                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ i }}.png" style="width: 105px;height: 105px;">
+                                                <p class="text-center" style="font-size: 12px;">#{{ i }}&nbsp;{{ data["results"][i - 1]["name"].capitalize() }}</p>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+            {% if type == "pokedex" %}
+                <a href="{{ url_for('auth.landing_page') }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            {% else %}
+                <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team_id, team_index=team_index) }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content%}

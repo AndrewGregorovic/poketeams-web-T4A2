@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>View Pokemon</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container" style="width: auto;max-width: none;padding: 0px;">
+        {% if type == "pokedex" %}
+            <div class="row" style="margin: 0px;width: auto;">
+                <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                    <h2 class="text-center">Pokedex Entry</h2>
+                </div>
+            </div>
+        {% else %}
+            <div class="row" style="margin: 0px;width: auto;">
+                <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
+                    <h2 class="text-center">{{ team.name }}</h2>
+                    {% if current_user.id != team.owner_id %}
+                        <p class="text-center">by {{ team.owner.username }}</p>
+                    {% endif %}
+                    <p class="text-center">Slot {{ team_index }}</p>
+                </div>
+            </div>
+        {% endif %}
+        {% if data %}
+            <div class="row" style="margin: 0px;">
+                <div class="col-sm-12 col-md-6 d-sm-flex justify-content-sm-center align-items-sm-center" style="padding: 0px;">
+                    <img src="{{ data[0]['sprites']['front_default'] }}" style="width: 400px;height: 400px;">
+                </div>
+                <div class="col-md-6" style="padding: 50px;">
+                    <p>Name: {{ data[0]["name"].capitalize() }}</p>
+                    <p>Pokedex ID: {{ data[0]["id"] }}</p>
+                    <p>Height: {{ data[0]["height"]/10 }} m</p>
+                    <p>Weight: {{ data[0]["weight"]/10 }} kg</p>
+                    <p style="margin-bottom: 0px;">Types:</p>
+                    {% for type in data[0]["types"] %}
+                        <p style="margin-bottom: 0px;margin-left: 20px;">- {{ type["type"]["name"].capitalize() }}</p>
+                    {% endfor %}
+                    <p style="margin-bottom: 0px;margin-top: 16px;">Abilities:</p>
+                    {% for ability in data[1] %}
+                        <p style="margin-bottom: 0px;margin-left: 20px;">- {{ ability["name"].capitalize() }}</p>
+                        {% for entry in ability["effect_entries"] %}
+                            {% if entry["language"]["name"] == "en" %}
+                                <p style="margin-bottom: 0px;margin-left: 50px;">{{ entry["short_effect"] }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row d-lg-flex justify-content-lg-center" style="margin: 0px;">
+                <div class="col-12" style="padding: 50px;width: 600px;max-width: 600px;min-width: 400px;">
+                    <p style="width: 500px;">Name: Empty</p>
+                    <p style="width: 500px;">Pokedex ID: ???</p>
+                    <p style="width: 500px;">Height: ???</p>
+                    <p style="width: 500px;">Weight: ???</p>
+                    <p style="margin-bottom: 0px;width: 500px;">Types:</p>
+                    <p style="margin-bottom: 0px;margin-left: 20px;width: 480px;">- ???</p>
+                    <p style="margin-bottom: 0px;margin-top: 16px;width: 500px;">Abilities:</p>
+                    <p style="margin-bottom: 0px;margin-left: 20px;width: 480px;">- ???</p>
+                    <p style="margin-bottom: 0px;margin-left: 50px;width: 450px;">??????</p>
+                </div>
+            </div>
+        {% endif %}
+        {% if type == "pokedex" or type == "team-selected" %}
+            <div class="row" style="margin: 0px;">
+                <div class="col" style="padding-right: 40px;padding-left: 40px;padding-bottom: 40px;">
+                    <div role="tablist" id="accordion-1">
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0 text-center"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Learnable Moves</a></h5>
+                            </div>
+                            <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-horizontal d-sm-flex flex-wrap justify-content-sm-center">
+                                        {% for move in data[0]["moves"] %}
+                                            <li class="list-group-item" style="max-width: 150px;width: 150px;font-size: 12px;padding: 10px;min-width: 150px;border-radius: 0px;border: 1px solid rgb(0,0,0) ;">
+                                                <span style="width: 150px;max-width: 200px;font-size: 12px;">{{ move["move"]["name"].capitalize() }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif type == "team" %}
+            <p class="text-center" style="margin-bottom: 20px;margin-top: 20px;">Learned Moves:</p>
+            <div class="row d-sm-flex d-md-flex justify-content-sm-center justify-content-md-center" style="margin: 0px;padding: 0;">
+                {% for i in range(4) %}
+                    {% if moves[i] %}
+                        <a href="" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ moves[i].pokemon_move_index }}: {{ moves[i].move.move_name }}<br></p>
+                        </a>
+                    {% elif data and not moves[i] %}
+                        <a href="" class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ i + 1 }}: Empty<br></p>
+                        </a>
+                    {% elif not data %}
+                        <div class="col-sm-12 col-md-6 d-md-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center" style="max-width: 45%;min-width: 370px;padding: 30px;border-radius: 10px;border-width: 2px;border-style: solid;margin: 20px;">
+                            <p class="text-center" style="margin: 0px;">Move #{{ i + 1 }}: Empty<br></p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if type == "pokedex" %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
+                <a href="{{ url_for('pokemon.get_view_pokemon_list') }}">
+                    <button class="btn btn-primary" type="button">Back</button>
+                </a>
+            </div>
+        {% elif type == "team" %}
+            {% if current_user.id == team.owner_id %}
+                {% if data %}
+                    <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                        <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                            <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Change Pokemon</button>
+                        </a>
+                        <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                            <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Back</button>
+                        </a>
+                        <form method="POST" action="{{ url_for('pokemon.delete_team_slot_pokemon', team_id=team_id, team_index=team_index) }}">
+                            {{ form.csrf_token }}
+                            <div class="submit-button" style="margin: 0px 20px;">
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                        <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                            <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Change Pokemon</button>
+                        </a>
+                        <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                            <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                        </a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                    <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                        <button class="btn btn-primary" type="button">Back</button>
+                    </a>
+                </div>
+            {% endif %}        
+        {% else %}
+            <div class="d-flex justify-content-center" style="margin-bottom: 50px;margin-top: 30px;">
+                <form method="POST" action="{{ url_for('pokemon.edit_team_slot_pokemon', team_id=team_id, team_index=team_index, pokeapi_id=pokeapi_id) }}">
+                    {{ form.csrf_token }}
+                    <div class="submit-button" style="margin-right: 50px;">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+                <a href="{{ url_for('pokemon.get_team_pokemon_list', team_id=team_id, team_index=team_index) }}">
+                    <button class="btn btn-primary" type="button" style="margin-left: 50px;">Back</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content%}
