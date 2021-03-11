@@ -53,14 +53,15 @@ class TestTeamsFrontend(CustomBaseTestClass):
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
 
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("pokemon.view_team_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index))
+                response = c.get(url_for("pokemon.view_team_pokemon", team_id=team.id, team_index=random.randint(1, 6)))
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(template.name, "pokemon_view.html")
                 self.assertIsInstance(context["form"], RemovePokemonForm)
                 self.assertIn(b"Change Pokemon", response.data)
-                self.assertIn(b"Remove Pokemon", response.data)
+                if b"Name: Empty" not in response.data:
+                    self.assertIn(b"Remove Pokemon", response.data)
                 self.assertIn(bytes(team.name, "utf-8"), response.data)
 
             self.logout()
@@ -69,7 +70,7 @@ class TestTeamsFrontend(CustomBaseTestClass):
             team = random.choice(Team.query.filter_by(is_private=False).all())
 
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("pokemon.view_team_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index))
+                response = c.get(url_for("pokemon.view_team_pokemon", team_id=team.id, team_index=random.randint(1, 6)))
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)
@@ -89,7 +90,7 @@ class TestTeamsFrontend(CustomBaseTestClass):
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
 
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("pokemon.get_team_pokemon_list", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index))
+                response = c.get(url_for("pokemon.get_team_pokemon_list", team_id=team.id, team_index=random.randint(1, 6)))
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)
@@ -107,7 +108,7 @@ class TestTeamsFrontend(CustomBaseTestClass):
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
 
             with captured_templates(self.app) as templates:
-                response = c.get(url_for("pokemon.view_selected_team_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index, pokeapi_id=random.randint(1, 898)))
+                response = c.get(url_for("pokemon.view_selected_team_pokemon", team_id=team.id, team_index=random.randint(1, 6), pokeapi_id=random.randint(1, 898)))
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)
@@ -125,13 +126,13 @@ class TestTeamsFrontend(CustomBaseTestClass):
         with self.client as c:
             team = random.choice(Team.query.all())
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
-            response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index, pokeapi_id=random.randint(1, 898)))
+            response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=random.randint(1, 6), pokeapi_id=random.randint(1, 898)))
 
             self.assertEqual(response.status_code, 302)
 
             # Test when redirect is followed
             with captured_templates(self.app) as templates:
-                response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index, pokeapi_id=random.randint(1, 898)), follow_redirects=True)
+                response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=random.randint(1, 6), pokeapi_id=random.randint(1, 898)), follow_redirects=True)
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)
@@ -144,19 +145,19 @@ class TestTeamsFrontend(CustomBaseTestClass):
 
         # Test status code for redirect
         with self.client as c:
-            team = random.choice(Team.query.all())
+            team = self.get_team_at_least_one_pokemon()
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
-            response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index))
+            response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team.id, team_index=self.get_random_team_pokemon(team).team_index))
 
             self.assertEqual(response.status_code, 302)
 
             self.logout()
 
             # Test when redirect is followed
-            team = random.choice(Team.query.all())
+            team = self.get_team_at_least_one_pokemon()
             self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
             with captured_templates(self.app) as templates:
-                response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team.id, team_index=random.choice(team.team_pokemon).team_index), follow_redirects=True)
+                response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team.id, team_index=self.get_random_team_pokemon(team).team_index), follow_redirects=True)
                 template, context = templates[0]
 
                 self.assertEqual(response.status_code, 200)

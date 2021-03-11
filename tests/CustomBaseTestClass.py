@@ -1,10 +1,12 @@
 import os
+import random
 from unittest import TestCase
 
 from flask import url_for
 from flask_login import current_user, logout_user
 
 from src.main import create_app, db
+from src.models.Team import Team
 
 
 class CustomBaseTestClass(TestCase):
@@ -54,3 +56,17 @@ class CustomBaseTestClass(TestCase):
     @classmethod
     def logout_follow(cls):
         return cls.client.get(url_for("auth.logout"), follow_redirects=True)
+
+    @classmethod
+    def get_team_at_least_one_pokemon(cls):
+        while True:
+            team = random.choice(Team.query.all())
+            if len(team.team_pokemon) >= 1:
+                return team
+
+    @classmethod
+    def get_random_team_pokemon(cls, team):
+        if len(team.team_pokemon) == 1:
+            return team.team_pokemon[0]
+        else:
+            return random.choice(team.team_pokemon)
