@@ -4,13 +4,12 @@ from flask import url_for
 
 from src.models.Pokemon import Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
-from src.models.Team import Team
 from src.models.TeamsPokemon import Teams_Pokemon
 from tests.CustomBaseTestClass import CustomBaseTestClass
 from tests.helper_function import captured_templates
 
 
-class TestTeamsBackend(CustomBaseTestClass):
+class TestPokemonBackend(CustomBaseTestClass):
     """
     Test cases to test the backend logic of the teams controller endpoints.
     """
@@ -21,16 +20,14 @@ class TestTeamsBackend(CustomBaseTestClass):
         """
 
         with self.client as c:
-            team = random.choice(Team.query.filter_by(is_private=False).all())
+            team_pokemon = self.get_random_team_pokemon_public()
 
             with captured_templates(self.app) as templates:
-                c.get(url_for("pokemon.view_team_pokemon", team_id=team.id, team_index=random.randint(1, 6)))
+                c.get(url_for("pokemon.view_team_pokemon", team_id=team_pokemon.team_id, team_index=team_pokemon.team_index))
                 template, context = templates[0]
 
                 if context["moves"]:
                     self.assertEqual(len(context["moves"]), 4)
-                else:
-                    self.assertEqual(context["data"], context["moves"])
 
     def test_edit_team_slot_pokemon(self):
         """
@@ -38,13 +35,12 @@ class TestTeamsBackend(CustomBaseTestClass):
         """
 
         with self.client as c:
-            team = self.get_team_at_least_one_pokemon()
-            self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
-
-            team_pokemon = self.get_random_team_pokemon(team)
+            team_pokemon = self.get_random_team_pokemon()
             pokeapi_id = random.randint(1, 898)
+            self.login({"email": f"test{team_pokemon.team.owner_id}@test.com", "password": "123456"})
 
-            response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=team_pokemon.team_index, pokeapi_id=pokeapi_id), follow_redirects=True)
+            response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team_pokemon.team_id,
+                                      team_index=team_pokemon.team_index, pokeapi_id=pokeapi_id), follow_redirects=True)
 
             self.assertEqual(response.status_code, 200)
             self.assertEqual(team_pokemon.pokeapi_id, pokeapi_id)
@@ -61,16 +57,16 @@ class TestTeamsBackend(CustomBaseTestClass):
         """
 
         with self.client as c:
-            team = self.get_team_at_least_one_pokemon()
-            self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
+            team_pokemon = self.get_random_team_pokemon()
+            self.login({"email": f"test{team_pokemon.team.owner_id}@test.com", "password": "123456"})
 
-            team_pokemon = self.get_random_team_pokemon(team)
-            response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team.id, team_index=team_pokemon.team_index), follow_redirects=True)
+            response = c.post(url_for("pokemon.delete_team_slot_pokemon", team_id=team_pokemon.team_id,
+                                      team_index=team_pokemon.team_index), follow_redirects=True)
 
             self.assertEqual(response.status_code, 200)
 
             # Check teams_pokemon database entry was deleted
-            self.assertFalse(Teams_Pokemon.query.get((team.id, team_pokemon.team_index)))
+            self.assertFalse(Teams_Pokemon.query.get((team_pokemon.team_id, team_pokemon.team_index)))
 
             # Check child pokemon_moves database entries were deleted
             self.assertEqual(Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).all(), [])
