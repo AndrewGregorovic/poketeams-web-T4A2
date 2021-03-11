@@ -11,7 +11,7 @@ from tests.helper_function import captured_templates
 
 class TestMovesFrontend(CustomBaseTestClass):
     """
-    Test cases to test the frontend template rendering and redirects of the pokemon controller endpoints.
+    Test cases to test the frontend template rendering and redirects of the moves controller endpoints.
     """
 
     def test_view_pokemon_move(self):

@@ -35,6 +35,7 @@ class TestPokemonBackend(CustomBaseTestClass):
         """
 
         with self.client as c:
+            # Updating a pokemon
             team_pokemon = self.get_random_team_pokemon()
             pokeapi_id = random.randint(1, 898)
             self.login({"email": f"test{team_pokemon.team.owner_id}@test.com", "password": "123456"})
@@ -45,11 +46,26 @@ class TestPokemonBackend(CustomBaseTestClass):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(team_pokemon.pokeapi_id, pokeapi_id)
 
-            # Check the new pokemon exists in the database
+            # Check the pokemon exists in the database
             self.assertTrue(Pokemon.query.get(pokeapi_id))
+            self.assertTrue(Teams_Pokemon.query.get((team_pokemon.team_id, team_pokemon.team_index)))
 
             # Check moves assigned to the previous pokemon are deleted
             self.assertEqual(Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).all(), [])
+
+            # Adding a pokemon
+            team, team_index = self.get_empty_pokemon_slot()
+            pokeapi_id = random.randint(1, 898)
+            self.login({"email": f"test{team.owner_id}@test.com", "password": "123456"})
+
+            response = c.post(url_for("pokemon.edit_team_slot_pokemon", team_id=team.id, team_index=team_index,
+                                      pokeapi_id=pokeapi_id), follow_redirects=True)
+
+            self.assertEqual(response.status_code, 200)
+
+            # Check the new pokemon exists in the database
+            self.assertTrue(Pokemon.query.get(pokeapi_id))
+            self.assertTrue(Teams_Pokemon.query.get((team.id, team_index)))
 
     def test_delete_team_slot_pokemon(self):
         """
