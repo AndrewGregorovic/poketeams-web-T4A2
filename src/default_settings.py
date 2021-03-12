@@ -21,7 +21,7 @@ class Config(object):
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
-        return get_env_var("DB_URI")
+        return get_env_var("DATABASE_URL")
 
 
 class DevelopmentConfig(Config):
