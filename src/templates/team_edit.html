@@ -19,7 +19,7 @@
                     <h2 style="margin-bottom: 50px;">Edit Pokemon Team</h2>
                     <fieldset>
                         <legend style="font-size: 16px;">Team Name</legend>
-                        {{ form.team_name }}
+                        {{ form.team_name(style="width: 500px;min-width: 300px;") }}
                         {% if form.team_name.errors %}
                             <div class="form-errors">
                                 {% for error in form.team_name.errors %}
@@ -30,7 +30,7 @@
                     </fieldset>
                     <fieldset>
                         <legend style="font-size: 16px;">Description (optional)</legend>
-                        {{ form.description }}
+                        {{ form.description(style="width: 500px;min-width: 300px;") }}
                         {% if form.description.errors %}
                             <div class="form-errors">
                                 {% for error in form.description.errors %}

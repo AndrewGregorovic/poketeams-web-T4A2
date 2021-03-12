@@ -9,7 +9,7 @@
         <div class="row" style="margin: 0px;width: auto;">
             <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
                 <h2 class="text-center">{{ team_pokemon.team.name }}</h2>
-                <p class="text-center">Slot Slot {{ team_pokemon.team_index }}: {{ team_pokemon.pokemon.pokemon_name }}, Move {{ pokemon_move_index }}</p>
+                <p class="text-center">Slot Slot {{ team_pokemon.team_index }}: {{ team_pokemon.pokemon.pokemon_name.capitalize() }}, Move {{ pokemon_move_index }}</p>
             </div>
         </div>
         <div class="row d-lg-flex justify-content-lg-center" style="margin: 0px;">
@@ -24,7 +24,7 @@
                 <p style="width: 500px;">Type: {{ data["type"]["name"].capitalize() }}</p>
                 {% if data["effect_chance"] %}
                     <p style="width: 500px;">Effect Chance: {{ data["effect_chance"] }}%</p>
-                    {% set effect_chance = "data['effect_chance']%" %}
+                    {% set effect_chance = data.effect_chance ~ "%" %}
                 {% else %}
                     {% set effect_chance = "" %}
                 {% endif %}

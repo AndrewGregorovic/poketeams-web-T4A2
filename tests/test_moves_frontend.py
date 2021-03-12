@@ -90,7 +90,7 @@ class TestMovesFrontend(CustomBaseTestClass):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(template.name, "move_select.html")
                 self.assertIn(bytes(team_pokemon.team.name, "utf-8"), response.data)
-                self.assertIn(bytes(team_pokemon.pokemon.pokemon_name, "utf-8"), response.data)
+                self.assertIn(bytes(team_pokemon.pokemon.pokemon_name.capitalize(), "utf-8"), response.data)
 
     def test_view_selected_pokemon_move(self):
         """
