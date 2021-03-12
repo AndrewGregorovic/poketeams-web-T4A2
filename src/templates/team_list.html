@@ -37,23 +37,33 @@
                         </p>
                     {% else %}
                         <p class="text-center" style="font-size: 32px;font-weight: 300;">There are currently no public Pokemon teams.</p>
-                        <p class="text-center">
-                            <a href="{{ url_for('auth.login') }}">
-                                <button class="btn btn-primary" type="button" style="margin: auto;">Log In</button>
-                            </a>
-                            &nbsp; to create a team.
-                        </p>
+                        {% if current_user.is_anonymous %}
+                            <p class="text-center">
+                                <a href="{{ url_for('auth.login') }}">
+                                    <button class="btn btn-primary" type="button" style="margin: auto;">Log In</button>
+                                </a>
+                                &nbsp; to create a team.
+                            </p>
+                        {% else %}
+                            <p class="text-center">
+                                <a href="{{ url_for('teams.create_team') }}">
+                                    <button class="btn btn-primary" type="button" style="margin: auto;">Create a Team</button>
+                                </a>
+                            </p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
         {% else %}
-            <div class="col" style="width: auto;padding: 0px 0px;">
-                <p class="text-center">
-                    <a href="{{ url_for('teams.create_team') }}">
-                        <button class="btn btn-primary" type="button" style="margin: auto;">Create a Team</button>
-                    </a>
-                </p>
-            </div>
+            {% if current_user.is_authenticated %}
+                <div class="col" style="width: auto;padding: 0px 0px;">
+                    <p class="text-center">
+                        <a href="{{ url_for('teams.create_team') }}">
+                            <button class="btn btn-primary" type="button" style="margin: auto;">Create a Team</button>
+                        </a>
+                    </p>
+                </div>
+            {% endif %}
         {% endif %}
         <div class="row row-cols-4" style="margin: 0px;padding: 50px;">
             {% for team in teams %}
@@ -66,7 +76,7 @@
                     {% endif %}
                     {% for i in range(6) %}
                         {% if team.team_pokemon[i] %}
-                            <p style="margin-left: 70px;margin-bottom: 10px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name }}</p>
+                            <p style="margin-left: 70px;margin-bottom: 10px;">Slot #{{ i + 1 }}: {{ team.team_pokemon[i].pokemon.pokemon_name.capitalize() }}</p>
                         {% else %}
                             <p style="margin-left: 70px;margin-bottom: 10px;">Slot #{{ i + 1 }}: Empty</p>
                         {% endif %}

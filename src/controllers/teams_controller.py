@@ -4,7 +4,6 @@ from flask_login import current_user, login_required
 from src.forms import CreateTeamForm, DeleteTeamForm, EditTeamForm
 from src.main import db
 from src.models.Team import Team
-from src.models.TeamsPokemon import Teams_Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
 import src.schemas.MoveSchema                                           # noqa: F401
 import src.schemas.PokemonSchema                                        # noqa: F401
@@ -18,41 +17,38 @@ teams = Blueprint("teams", __name__)
 @teams.route("/my-teams", methods=["GET"])
 @login_required
 def get_users_teams():
+    """
+    Returns the personal team list page for a logged in user.
+    """
+
     team_list = Team.query.filter_by(owner_id=current_user.id).all()
-
-    for team in team_list:
-        team.team_pokemon.sort(key=lambda x: x.team_index)
-
+    team_list = Team.sort_team_pokemon(team_list)
     team_list_dict = teams_schema.dump(team_list)
-    for team in team_list_dict:
-        indices = [pokemon["team_index"] for pokemon in team["team_pokemon"]]
-        for i in range(6):
-            if i + 1 not in indices:
-                team["team_pokemon"].insert(i, None)
-
+    team_list_dict = Team.fill_empty_team_slots(team_list_dict)
     return render_template("team_list.html", teams=team_list_dict, type="personal")
 
 
 @teams.route("/teams", methods=["GET"])
 def get_public_teams():
+    """
+    Returns the public team list page.
+    """
+
     team_list = Team.query.filter_by(is_private=False).all()
-
-    for team in team_list:
-        team.team_pokemon.sort(key=lambda x: x.team_index)
-
+    team_list = Team.sort_team_pokemon(team_list)
     team_list_dict = teams_schema.dump(team_list)
-    for team in team_list_dict:
-        indices = [pokemon["team_index"] for pokemon in team["team_pokemon"]]
-        for i in range(6):
-            if i + 1 not in indices:
-                team["team_pokemon"].insert(i, None)
-
+    team_list_dict = Team.fill_empty_team_slots(team_list_dict)
     return render_template("team_list.html", teams=team_list_dict, type="public")
 
 
 @teams.route("/teams/create", methods=["GET", "POST"])
 @login_required
 def create_team():
+    """
+    GET returns the template for the create team page, when the form is submitted the data is
+    sent back to the endpoint using POST which creates the team.
+    """
+
     form = CreateTeamForm()
     if form.validate_on_submit():
         team = Team()
@@ -70,17 +66,19 @@ def create_team():
 
 @teams.route("/teams/<int:team_id>", methods=["GET"])
 def get_team(team_id):
+    """
+    Returns the team view page for a team, to get the template displaying correctly the
+    pokemon and move data needs to be filled with None objects for empty slots
+    """
+
     form = DeleteTeamForm()
     team = Team.query.get(team_id)
-
     team.team_pokemon.sort(key=lambda x: x.team_index)
 
-    # Need to query pokemon moves separately
-    query_moves = db.session.query(Teams_Pokemon, Pokemon_Moves)\
-        .join(Pokemon_Moves, Teams_Pokemon.id == Pokemon_Moves.team_pokemon_id)\
-        .order_by(Teams_Pokemon.team_index, Pokemon_Moves.pokemon_move_index)\
-        .filter(Teams_Pokemon.team_id == team_id)\
-        .all()
+    # Get the move set for each pokemon
+    move_sets = []
+    for pokemon in team.team_pokemon:
+        move_sets.append(Pokemon_Moves.query.filter_by(team_pokemon_id=pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all())
 
     # Fill any empty pokemon slots in team with None
     # Needs to be done in dict otherwise SQLAlchemy will try to insert None objects into the database
@@ -90,11 +88,7 @@ def get_team(team_id):
         if i + 1 not in indices:
             team_dict["team_pokemon"].insert(i, None)
 
-    # Format query results to group moves into move sets by pokemon pokeapi.id
-    ids = {q[1].pokeapi_id for q in query_moves}
-    move_sets = [[q[1] for q in query_moves if q[1].pokeapi_id == id] for id in ids]
-
-    # Fill any empty move slots with None, again needs to be done as a dict
+    # Fill any empty move slots within each move set with None, again needs to be done as a dict
     move_sets_dict = [pokemon_moves_schema.dump(move_set) for move_set in move_sets]
     for move_set in move_sets_dict:
         indices = [move["pokemon_move_index"] for move in move_set]
@@ -102,16 +96,10 @@ def get_team(team_id):
             if i + 1 not in indices:
                 move_set.insert(i, None)
 
-    # team_pokemon_ids = []
-    # for move_set in move_sets:
-    #     for move in move_set:
-    #         team_pokemon_ids.append(move.team_pokemon_id)
-    # team_pokemon_ids = set(team_pokemon_ids)
-
     # Fill move_sets_dict with None for empty pokemon slots or if pokemon has no moves assigned to it
-    team_pokemon_ids = {move.team_pokemon_id for move_set in move_sets for move in move_set}
+    team_pokemon_ids = [pokemon.team_index for pokemon in team.team_pokemon]
     for i in range(6):
-        if team_dict["team_pokemon"][i] is None or team_dict["team_pokemon"][i]["id"] not in team_pokemon_ids:
+        if i + 1 not in team_pokemon_ids:
             move_sets_dict.insert(i, None)
 
     return render_template("team_view.html", form=form, team=team_dict, team_id=team_id, move_sets=move_sets_dict)
@@ -120,8 +108,14 @@ def get_team(team_id):
 @teams.route("/teams/<int:team_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_team_details(team_id):
+    """
+    GET returns the template for the edit team page, when the form is submitted the data is
+    sent back to the endpoint using POST which updates the team data.
+    """
 
     team = Team.query.filter_by(id=team_id)
+
+    # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
     if current_user.id == team[0].owner_id:
         form = EditTeamForm()
         if form.validate_on_submit():
@@ -140,6 +134,7 @@ def edit_team_details(team_id):
             flash("Team details updated successfully.")
             return redirect(url_for("teams.get_team", team_id=team_id))
 
+        # Prepopulate the form with existing data
         form.team_name.data = team[0].name
         form.description.data = team[0].description
         form.is_private.data = team[0].is_private
@@ -147,13 +142,19 @@ def edit_team_details(team_id):
         return render_template("team_edit.html", form=form, team_id=team_id)
     else:
         flash("You do not have permission to edit this team.")
-        return redirect(url_for("teams.get_team", team_id=team_id))
+        return redirect(url_for("teams.get_public_teams"))
 
 
 @teams.route("/teams/<int:team_id>/delete", methods=["POST"])
 @login_required
 def delete_team(team_id):
+    """
+    Deletes the team from the database with a cascading effect on all child entries.
+    """
+
     team = Team.query.get(team_id)
+
+    # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
     if current_user.id == team.owner_id:
         form = DeleteTeamForm()
         if form.validate_on_submit():
@@ -167,4 +168,4 @@ def delete_team(team_id):
             return redirect(url_for("teams.get_users_teams"))
     else:
         flash("You do not have permission to delete this team.")
-        return redirect(url_for("teams.get_team", team_id=team_id))
+        return redirect(url_for("teams.get_public_teams"))

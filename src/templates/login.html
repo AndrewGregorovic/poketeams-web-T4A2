@@ -21,26 +21,26 @@
                         <legend>Email</legend>
                         {{ form.email }}
                         {% if form.email.errors %}
-                            <ul class="form-errors">
+                            <div class="form-errors">
                                 {% for error in form.email.errors %}
-                                    <li>{{ error }}</li>
+                                    <p>{{ error }}</p>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         {% endif %}
                     </fieldset>
                     <fieldset class="password" style="padding-right: 10px;padding-left: 10px;margin-top: 10px;">
                         <legend>Password</legend>
                         {{ form.password }}
                         {% if form.password.errors %}
-                            <ul class="form-errors">
+                            <div class="form-errors">
                                 {% for error in form.password.errors %}
-                                    <li>{{ error }}</li>
+                                    <p>{{ error }}</p>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         {% endif %}
                     </fieldset>
                     <div class="submit-button" style="margin-top: 20px;margin-left: 10px;margin-bottom: 20px;">
-                        {{ form.submit }}
+                        {{ form.submit(class="btn btn-primary") }}
                     </div>
                     <p style="margin-left: 10px;">Don't have an account?&nbsp;<a href="{{ url_for('auth.signup') }}">Sign up now</a></p>
                 </form>
