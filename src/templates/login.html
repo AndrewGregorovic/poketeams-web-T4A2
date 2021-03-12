@@ -19,7 +19,7 @@
                     <h1>Log In</h1>
                     <fieldset class="email" style="padding-right: 10px;padding-left: 10px;margin-top: 10px;">
                         <legend>Email</legend>
-                        {{ form.email }}
+                        {{ form.email(style="width: 300px;") }}
                         {% if form.email.errors %}
                             <div class="form-errors">
                                 {% for error in form.email.errors %}
@@ -30,7 +30,7 @@
                     </fieldset>
                     <fieldset class="password" style="padding-right: 10px;padding-left: 10px;margin-top: 10px;">
                         <legend>Password</legend>
-                        {{ form.password }}
+                        {{ form.password(style="width: 300px;") }}
                         {% if form.password.errors %}
                             <div class="form-errors">
                                 {% for error in form.password.errors %}

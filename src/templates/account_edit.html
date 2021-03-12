@@ -19,7 +19,7 @@
                     <h2 style="margin-bottom: 50px;">Edit Account Details</h2>
                     <fieldset>
                         <legend style="font-size: 16px;">Username</legend>
-                        {{ form.username }}
+                        {{ form.username(style="width: 500px;min-width: 300px;") }}
                         {% if form.username.errors %}
                             <div class="form-errors">
                                 {% for error in form.username.errors %}
@@ -30,7 +30,7 @@
                     </fieldset>
                     <fieldset>
                         <legend style="font-size: 16px;">Email Address</legend>
-                        {{ form.email(placeholder=current_user.email) }}
+                        {{ form.email(style="width: 500px;min-width: 300px;") }}
                         {% if form.email.errors %}
                             <div class="form-errors">
                                 {% for error in form.email.errors %}
@@ -44,7 +44,7 @@
                         <div class="collapse" id="collapse-1" style="margin-top: 20px;border-width: 1px;border-style: solid;border-radius: 10px;padding: 20px;">
                             <fieldset>
                                 <legend style="font-size: 16px;">Current Password</legend>
-                                {{ form.current_password }}
+                                {{ form.current_password(style="width: 400px;min-width: 300px;") }}
                                 {% if form.current_password.errors %}
                                     <div class="form-errors">
                                         {% for error in form.current_password.errors %}
@@ -55,7 +55,7 @@
                             </fieldset>
                             <fieldset>
                                 <legend style="font-size: 16px;">New Password</legend>
-                                {{ form.new_password }}
+                                {{ form.new_password(style="width: 400px;min-width: 300px;") }}
                                 {% if form.new_password.errors %}
                                     <div class="form-errors">
                                         {% for error in form.new_password.errors %}
@@ -66,7 +66,7 @@
                             </fieldset>
                             <fieldset>
                                 <legend style="font-size: 16px;">Confirm Password</legend>
-                                {{ form.confirm_password }}
+                                {{ form.confirm_password(style="width: 400px;min-width: 300px;") }}
                                 {% if form.confirm_password.errors %}
                                     <div class="form-errors">
                                         {% for error in form.confirm_password.errors %}
