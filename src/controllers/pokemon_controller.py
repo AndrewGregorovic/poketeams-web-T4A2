@@ -47,7 +47,7 @@ def view_team_pokemon(team_id, team_index):
 
     # If pokemon slot is empty skip the pokemon view and go to the pokemon list page to select a pokemon
     if not team_pokemon:
-        return redirect(url_for("pokemon_select.html", team_id=team_id, team_index=team_index))
+        return redirect(url_for("pokemon.get_team_pokemon_list", team_id=team_id, team_index=team_index))
     else:
         pokemon_api_data = Pokemon.get_pokemon_data(team_pokemon.pokeapi_id)
 
@@ -61,7 +61,7 @@ def view_team_pokemon(team_id, team_index):
 
         ability_data = [Pokemon.get_pokemon_ability_data(ability["ability"]["url"]) for ability in pokemon_api_data["abilities"]]
         data = [pokemon_api_data, ability_data]
-        return render_template("pokemon_view.html", data=data, form=form, moves=move_set_dict, team_pokemon=team_pokemon, 
+        return render_template("pokemon_view.html", data=data, form=form, moves=move_set_dict, team_pokemon=team_pokemon,
                                team=team, team_id=team_id, team_index=team_index, type="team")
 
 
@@ -128,7 +128,7 @@ def edit_team_slot_pokemon(team_id, team_index, pokeapi_id):
                 pokemon = Pokemon()
                 pokemon.pokeapi_id = pokeapi_id
                 pokemon.pokemon_id = int(pokemon_api_data["species"]["url"].replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", ""))
-                pokemon.pokemon_name = pokemon_api_data["name"].capitalize()
+                pokemon.pokemon_name = pokemon_api_data["name"]
                 db.session.add(pokemon)
                 db.session.commit()
 

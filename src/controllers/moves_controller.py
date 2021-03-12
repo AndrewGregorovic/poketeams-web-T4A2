@@ -6,7 +6,7 @@ from src.main import db
 from src.models.Move import Move
 from src.models.Pokemon import Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
-from src.models.Team import Team
+from src.models.TeamsPokemon import Teams_Pokemon
 from src.schemas.PokemonMovesSchema import pokemon_move_schema
 
 
@@ -44,11 +44,11 @@ def get_pokemon_move_list(team_id, team_index, pokemon_move_index):
 
     # Get current move as the back button on the template will need a different url if the current move is empty
     current_move = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokemon_move_index=pokemon_move_index).first()
-    
+
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
     if current_user.id == team_pokemon.team.owner_id:
-       
-       # Get the Pokemons currently learned moves so that they can be excluded from the move list
+
+        # Get the Pokemons currently learned moves so that they can be excluded from the move list
         move_set = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all()
         move_list = Move.get_move_list(Pokemon.get_pokemon_data(team_pokemon.pokeapi_id), move_set)
         return render_template("move_select.html", move_list=move_list, team_pokemon=team_pokemon, current_move=current_move,
