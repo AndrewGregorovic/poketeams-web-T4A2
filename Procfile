@@ -1,1 +1,1 @@
-web: gunicorn --pythonoath src "main:create_app()"
+web: gunicorn --pythonpath src "main:create_app()"
