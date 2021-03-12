@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from flask import flash, Flask, jsonify, redirect, url_for
+from flask import abort, flash, Flask, jsonify, redirect, render_template, url_for
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
@@ -63,7 +63,19 @@ def create_app():
         return redirect(url_for("auth.login"))
 
     @app.errorhandler(ValidationError)
-    def handle_bad_request(error):
+    def handle_validation_error(error):
         return (jsonify(error.messages), 400)
 
+    @app.errorhandler(Exception)
+    def global_error_handler(error):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(400)
+    def bad_request_error_handler(error):
+        return render_template('404.html'), 404
+
     return app
+
+
+def my_error_func(error_message):
+    return abort(404)

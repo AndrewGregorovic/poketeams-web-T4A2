@@ -1,8 +1,9 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
+from flask_parameter_validation import Route, ValidateParameters
 
 from src.forms import ConfirmForm, RemovePokemonForm
-from src.main import db
+from src.main import db, my_error_func
 from src.models.Pokemon import Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
 from src.models.Team import Team
@@ -36,7 +37,9 @@ def view_selected_pokemon(pokeapi_id):
 
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>", methods=["GET"])
-def view_team_pokemon(team_id, team_index):
+@ValidateParameters(my_error_func)
+def view_team_pokemon(team_id: int = Route(),
+                      team_index: int = Route(min_int=1, max_int=6)):
     """
     Returns the pokemon view page for a pokemon on a team.
     """
@@ -67,7 +70,9 @@ def view_team_pokemon(team_id, team_index):
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/select", methods=["GET"])
 @login_required
-def get_team_pokemon_list(team_id, team_index):
+@ValidateParameters(my_error_func)
+def get_team_pokemon_list(team_id: int = Route(),
+                          team_index: int = Route(min_int=1, max_int=6)):
     """
     Returns the pokemon list page for a team pokemon slot.
     """
@@ -89,7 +94,10 @@ def get_team_pokemon_list(team_id, team_index):
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/select/<int:pokeapi_id>", methods=["GET"])
 @login_required
-def view_selected_team_pokemon(team_id, team_index, pokeapi_id):
+@ValidateParameters(my_error_func)
+def view_selected_team_pokemon(team_id: int = Route(),
+                               team_index: int = Route(min_int=1, max_int=6),
+                               pokeapi_id: int = Route()):
     """
     Returns the pokemon view page for pokemon selected on the previous pokemon select page.
     """
@@ -110,7 +118,10 @@ def view_selected_team_pokemon(team_id, team_index, pokeapi_id):
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/edit/<int:pokeapi_id>", methods=["POST"])
 @login_required
-def edit_team_slot_pokemon(team_id, team_index, pokeapi_id):
+@ValidateParameters(my_error_func)
+def edit_team_slot_pokemon(team_id: int = Route(),
+                           team_index: int = Route(min_int=1, max_int=6),
+                           pokeapi_id: int = Route()):
     """
     Adds a new pokemon to a team or updates an existing pokemon, when updating all child entries are deleted.
     """
@@ -166,7 +177,9 @@ def edit_team_slot_pokemon(team_id, team_index, pokeapi_id):
 
 @pokemon.route("/teams/<int:team_id>/<int:team_index>/delete", methods=["POST"])
 @login_required
-def delete_team_slot_pokemon(team_id, team_index):
+@ValidateParameters(my_error_func)
+def delete_team_slot_pokemon(team_id: int = Route(),
+                             team_index: int = Route(min_int=1, max_int=6)):
     """
     Deletes a pokemon from a team along with any moves that have been assigned to it.
     """

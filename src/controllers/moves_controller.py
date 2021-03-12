@@ -1,8 +1,9 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
+from flask_parameter_validation import Route, ValidateParameters
 
 from src.forms import ConfirmForm, RemoveMoveForm
-from src.main import db
+from src.main import db, my_error_func
 from src.models.Move import Move
 from src.models.Pokemon import Pokemon
 from src.models.PokemonMoves import Pokemon_Moves
@@ -14,7 +15,10 @@ moves = Blueprint("moves", __name__)
 
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>", methods=["GET"])
-def view_pokemon_move(team_id, team_index, pokemon_move_index):
+@ValidateParameters(my_error_func)
+def view_pokemon_move(team_id: int = Route(),
+                      team_index: int = Route(min_int=1, max_int=6),
+                      pokemon_move_index: int = Route(min_int=1, max_int=4)):
     """
     Returns the move view page for a move known by a pokemon on a team.
     """
@@ -35,7 +39,10 @@ def view_pokemon_move(team_id, team_index, pokemon_move_index):
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select", methods=["GET"])
 @login_required
-def get_pokemon_move_list(team_id, team_index, pokemon_move_index):
+@ValidateParameters(my_error_func)
+def get_pokemon_move_list(team_id: int = Route(),
+                          team_index: int = Route(min_int=1, max_int=6),
+                          pokemon_move_index: int = Route(min_int=1, max_int=4)):
     """
     Returns the move list page for a pokemon on a team.
     """
@@ -60,7 +67,11 @@ def get_pokemon_move_list(team_id, team_index, pokemon_move_index):
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select/<int:move_id>", methods=["GET"])
 @login_required
-def view_selected_pokemon_move(team_id, team_index, pokemon_move_index, move_id):
+@ValidateParameters(my_error_func)
+def view_selected_pokemon_move(team_id: int = Route(),
+                               team_index: int = Route(min_int=1, max_int=6),
+                               pokemon_move_index: int = Route(min_int=1, max_int=4),
+                               move_id: int = Route()):
     """
     Returns the move view page for the move selected on the previous move list page.
     """
@@ -79,7 +90,11 @@ def view_selected_pokemon_move(team_id, team_index, pokemon_move_index, move_id)
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/edit/<int:move_id>", methods=["POST"])
 @login_required
-def edit_pokemon_move_slot(team_id, team_index, pokemon_move_index, move_id):
+@ValidateParameters(my_error_func)
+def edit_pokemon_move_slot(team_id: int = Route(),
+                           team_index: int = Route(min_int=1, max_int=6),
+                           pokemon_move_index: int = Route(min_int=1, max_int=4),
+                           move_id: int = Route()):
     """
     Adds a new move to a pokemon or updates an existing move and returns the user to the pokemon view page.
     """
@@ -133,7 +148,10 @@ def edit_pokemon_move_slot(team_id, team_index, pokemon_move_index, move_id):
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/delete", methods=["POST"])
 @login_required
-def delete_pokemon_move_slot(team_id, team_index, pokemon_move_index):
+@ValidateParameters(my_error_func)
+def delete_pokemon_move_slot(team_id: int = Route(),
+                             team_index: int = Route(min_int=1, max_int=6),
+                             pokemon_move_index: int = Route(min_int=1, max_int=4)):
     """
     Removes a move from a pokemon and returns the user to the pokemon view page.
     """
