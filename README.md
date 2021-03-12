@@ -2,6 +2,7 @@
 
 #### Links
 Poketeams github repository: [https://github.com/AndrewGregorovic/poketeams-web-T4A2/](https://github.com/AndrewGregorovic/poketeams-web-T4A2/)
+
 Deployed application: [http://www.poketeams.ga/](http://www.poketeams.ga/)
 
 ---
@@ -45,6 +46,7 @@ With unit testing I split the tests up into what I would consider to be the fron
 In addition to unit testing I performed a set of manual testing in both a development environment once the app had been completed and in a production environment once most of the bugs and issues encountered in the first set of testing had been addressed. These sets of tests looked at performing user actions as both an authenticated user and an anonumous user to try and cover all of the applications endpoints and views.
 
 [Manual Testing Spreadsheet Development](docs/manual_testing_development.xlsx)
+
 [Manual Testing Spreadsheet Production](docs/manual_testing_production.xlsx)
 
 ## Project Management - Part B
