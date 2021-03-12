@@ -24,7 +24,7 @@
                 <p style="width: 500px;">Type: {{ data["type"]["name"].capitalize() }}</p>
                 {% if data["effect_chance"] %}
                     <p style="width: 500px;">Effect Chance: {{ data["effect_chance"] }}%</p>
-                    {% set effect_chance = "data['effect_chance']%" %}
+                    {% set effect_chance = data.effect_chance ~ "%" %}
                 {% else %}
                     {% set effect_chance = "" %}
                 {% endif %}
