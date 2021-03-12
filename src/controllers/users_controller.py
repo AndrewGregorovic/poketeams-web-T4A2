@@ -13,12 +13,20 @@ users = Blueprint("users", __name__)
 @users.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
+    """
+    Returns the dashboard page for a logged in user.
+    """
+
     return render_template("dashboard.html")
 
 
 @users.route("/account", methods=["GET"])
 @login_required
 def get_user_account_details():
+    """
+    Returns the user accound details page for the current user.
+    """
+
     form = DeleteUserAccountForm()
     return render_template("account.html", form=form)
 
@@ -26,6 +34,10 @@ def get_user_account_details():
 @users.route("/account/edit", methods=["GET", "POST"])
 @login_required
 def edit_user_account_details():
+    """
+    GET returns the template for the edit account page, when the form is submitted the data is
+    sent back to the endpoint using POST which updates the users account data.
+    """
 
     form = EditUserAccountForm()
     if form.validate_on_submit():
@@ -54,12 +66,21 @@ def edit_user_account_details():
             flash("Account details updated successfully.")
             return redirect(url_for("users.get_user_account_details"))
 
+    # Prepopulate the form with existing data
+    form.username.data = current_user.username
+    form.email.data = current_user.email
+
     return render_template("account_edit.html", form=form)
 
 
 @users.route("/account/delete", methods=["POST"])
 @login_required
 def delete_user_account():
+    """
+    Deletes the user from the database with a cascading effect on their created teams
+    and child entries.
+    """
+
     form = DeleteUserAccountForm()
     if form.validate_on_submit():
         user = current_user

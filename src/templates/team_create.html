@@ -48,7 +48,7 @@
                     </fieldset>
                     <div class="text-left d-flex justify-content-center" style="margin-top: 50px;">
                         <div class="submit-button" style="margin-right: 50px;">
-                            {{ form.submit }}
+                            {{ form.submit(class="btn btn-primary") }}
                         </div>
                         <a href="{{ url_for('teams.get_users_teams') }}">
                             <button class="btn btn-primary" type="button" style="margin-left: 50px;">Cancel</button>

@@ -15,7 +15,25 @@ class Team(db.Model):
         return f"<Team {self.id}: {self.name}>"
 
     @staticmethod
-    def get_team_pokemon(team, team_index):
-        for pokemon in team.team_pokemon:
-            if pokemon.team_index == team_index:
-                return pokemon
+    def sort_team_pokemon(teams):
+        """
+        Sorts pokemon in team.team_pokemon by team index for a list of teams
+        """
+
+        if type(teams) == list:
+            for team in teams:
+                team.team_pokemon.sort(key=lambda x: x.team_index)
+            return teams
+
+    @staticmethod
+    def fill_empty_team_slots(team_list_dict):
+        """
+        Takes a list of team dicts and fills empty pokemon slots with None
+        """
+
+        for team in team_list_dict:
+            indices = [pokemon["team_index"] for pokemon in team["team_pokemon"]]
+            for i in range(6):
+                if i + 1 not in indices:
+                    team["team_pokemon"].insert(i, None)
+        return team_list_dict

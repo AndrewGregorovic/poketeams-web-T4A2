@@ -15,10 +15,18 @@ class Move(db.Model):
 
     @staticmethod
     def get_move_data(move_id):
+        """
+        Requests move data from pokeapi and returns the data as JSON
+        """
+
         return json.loads(requests.get(f"https://pokeapi.co/api/v2/move/{move_id}").text)
 
     @staticmethod
     def get_move_list(pokemon_data, move_set):
+        """
+        Returns a list of learnable moves since a pokemon can't know the same move twice
+        """
+
         learned_moves = {move.move.move_name for move in move_set}
         return [[move["move"]["name"], move["move"]["url"].replace("https://pokeapi.co/api/v2/move/", "").replace("/", "")]
                 for move in pokemon_data["moves"] if move["move"]["name"] not in learned_moves]

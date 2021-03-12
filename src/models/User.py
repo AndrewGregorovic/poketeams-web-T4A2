@@ -27,15 +27,27 @@ class User(db.Model, UserMixin):
 
     @classmethod
     def check_unique_email(cls, email):
+        """
+        Checks uniqueness of an email address, returns True if unique
+        """
+
         if User.query.filter_by(email=email).first():
             return False
         return True
 
     @classmethod
     def check_unique_username(cls, username):
+        """
+        Checks uniqueness of a username, returns True if unique
+        """
+
         if User.query.filter_by(username=username).first():
             return False
         return True
 
     def check_password(self, password):
+        """
+        Checks that password data entered in a form matches the password has in the database
+        """
+
         return bcrypt.check_password_hash(self.password, password)

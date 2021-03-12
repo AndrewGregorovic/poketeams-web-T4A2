@@ -16,12 +16,24 @@ class Pokemon(db.Model):
 
     @staticmethod
     def get_pokedex_list():
+        """
+        Requests pokedex list data from pokeapi and returns the data as JSON
+        """
+
         return json.loads(requests.get("https://pokeapi.co/api/v2/pokemon?limit=898&offset=0").text)
 
     @staticmethod
     def get_pokemon_data(pokeapi_id):
+        """
+        Requests pokemon data from pokeapi and returns the data as JSON
+        """
+
         return json.loads(requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokeapi_id}").text)
 
     @staticmethod
     def get_pokemon_ability_data(ability_url):
+        """
+        Requests pokemon ability data from pokeapi and returns the data as JSON
+        """
+
         return json.loads(requests.get(ability_url).text)

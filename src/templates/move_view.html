@@ -51,7 +51,9 @@
                 </div>
             {% else %}
                 <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
-                    <button class="btn btn-primary" type="button">Back</button>
+                    <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team_id, team_index=team_index) }}">
+                        <button class="btn btn-primary" type="button">Back</button>
+                    </a>
                 </div>
             {% endif %}
         {% else %}
