@@ -1,1 +1,1 @@
-web: gunicorn "main:create_app()"
+web: gunicorn --pythonoath src "main:create_app()"
