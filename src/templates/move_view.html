@@ -8,7 +8,7 @@
     <div class="container" style="width: auto;max-width: none;padding: 0px;">
         <div class="row" style="margin: 0px;width: auto;">
             <div class="col" style="padding: 0px;width: auto;padding-top: 32px;padding-bottom: 32px;">
-                <h2 class="text-center">{{ team.name }}</h2>
+                <h2 class="text-center">{{ team_pokemon.team.name }}</h2>
                 <p class="text-center">Slot Slot {{ team_pokemon.team_index }}: {{ team_pokemon.pokemon.pokemon_name }}, Move {{ pokemon_move_index }}</p>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
         </div>
         {% if type == "team" %}
-            {% if current_user.id == team.owner_id %}
+            {% if current_user.id == team_pokemon.team.owner_id %}
                 <div class="d-flex justify-content-center" style="margin-bottom: 50px;">
                     <a href="{{ url_for('moves.get_pokemon_move_list', team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index) }}">
                         <button class="btn btn-primary" type="button" style="margin: 0px 20px;">Change Move</button>

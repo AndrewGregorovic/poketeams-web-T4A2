@@ -218,9 +218,15 @@
                     <button class="btn btn-primary" type="button">Back</button>
                 </a>
             {% else %}
-                <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team_id, team_index=team_index) }}">
-                    <button class="btn btn-primary" type="button">Back</button>
-                </a>
+                {% if current_pokemon %}
+                    <a href="{{ url_for('pokemon.view_team_pokemon', team_id=team_id, team_index=team_index) }}">
+                        <button class="btn btn-primary" type="button">Back</button>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('teams.get_team', team_id=team_id) }}">
+                        <button class="btn btn-primary" type="button">Back</button>
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
