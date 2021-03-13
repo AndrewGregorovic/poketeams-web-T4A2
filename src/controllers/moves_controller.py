@@ -1,5 +1,5 @@
-from flask import Blueprint, flash, redirect, render_template, url_for
-from flask_login import current_user, login_required
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user
 from flask_parameter_validation import Route, ValidateParameters
 
 from src.forms import ConfirmForm, RemoveMoveForm
@@ -38,7 +38,6 @@ def view_pokemon_move(team_id: int = Route(),
 
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select", methods=["GET"])
-@login_required
 @ValidateParameters(my_error_func)
 def get_pokemon_move_list(team_id: int = Route(),
                           team_index: int = Route(min_int=1, max_int=6),
@@ -49,11 +48,11 @@ def get_pokemon_move_list(team_id: int = Route(),
 
     team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
 
-    # Get current move as the back button on the template will need a different url if the current move is empty
-    current_move = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokemon_move_index=pokemon_move_index).first()
-
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team_pokemon.team.owner_id:
+    if current_user.is_authenticated and current_user.id == team_pokemon.team.owner_id:
+
+        # Get current move as the back button on the template will need a different url if the current move is empty
+        current_move = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id, pokemon_move_index=pokemon_move_index).first()
 
         # Get the Pokemons currently learned moves so that they can be excluded from the move list
         move_set = Pokemon_Moves.query.filter_by(team_pokemon_id=team_pokemon.id).order_by(Pokemon_Moves.pokemon_move_index).all()
@@ -62,11 +61,10 @@ def get_pokemon_move_list(team_id: int = Route(),
                                team_id=team_id, team_index=team_index, pokemon_move_index=pokemon_move_index)
     else:
         flash("You do not have permission to change this move.")
-        return redirect(url_for("teams.get_public_teams"))
+        return redirect(request.referrer)
 
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/select/<int:move_id>", methods=["GET"])
-@login_required
 @ValidateParameters(my_error_func)
 def view_selected_pokemon_move(team_id: int = Route(),
                                team_index: int = Route(min_int=1, max_int=6),
@@ -78,18 +76,17 @@ def view_selected_pokemon_move(team_id: int = Route(),
 
     team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team_pokemon.team.owner_id:
+    if current_user.is_authenticated and current_user.id == team_pokemon.team.owner_id:
         form = ConfirmForm()
         api_data = Move.get_move_data(move_id)
         return render_template("move_view.html", form=form, data=api_data, team_pokemon=team_pokemon, team_id=team_id, team_index=team_index,
                                pokemon_move_index=pokemon_move_index, move_id=move_id, type="team-selected")
     else:
         flash("You do not have permission to change this move.")
-        return redirect(url_for("teams.get_public_teams"))
+        return redirect(request.referrer)
 
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/edit/<int:move_id>", methods=["POST"])
-@login_required
 @ValidateParameters(my_error_func)
 def edit_pokemon_move_slot(team_id: int = Route(),
                            team_index: int = Route(min_int=1, max_int=6),
@@ -101,7 +98,7 @@ def edit_pokemon_move_slot(team_id: int = Route(),
 
     team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team_pokemon.team.owner_id:
+    if current_user.is_authenticated and current_user.id == team_pokemon.team.owner_id:
         form = ConfirmForm()
         if form.validate_on_submit():
 
@@ -143,11 +140,10 @@ def edit_pokemon_move_slot(team_id: int = Route(),
             return redirect(url_for("pokemon.view_team_pokemon", team_id=team_id, team_index=team_index))
     else:
         flash("You do not have permission to change this move.")
-        return redirect(url_for("teams.get_public_teams"))
+        return redirect(request.referrer)
 
 
 @moves.route("/teams/<int:team_id>/<int:team_index>/<int:pokemon_move_index>/delete", methods=["POST"])
-@login_required
 @ValidateParameters(my_error_func)
 def delete_pokemon_move_slot(team_id: int = Route(),
                              team_index: int = Route(min_int=1, max_int=6),
@@ -158,7 +154,7 @@ def delete_pokemon_move_slot(team_id: int = Route(),
 
     team_pokemon = Teams_Pokemon.query.get((team_id, team_index))
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team_pokemon.team.owner_id:
+    if current_user.is_authenticated and current_user.id == team_pokemon.team.owner_id:
         move = Pokemon_Moves.query.get((team_pokemon.id, team_pokemon.pokeapi_id, pokemon_move_index))
         form = RemoveMoveForm()
         if form.validate_on_submit():
@@ -171,4 +167,4 @@ def delete_pokemon_move_slot(team_id: int = Route(),
             return redirect(url_for("pokemon.view_team_pokemon", team_id=team_id, team_index=team_index))
     else:
         flash("You do not have permission to change this move.")
-        return redirect(url_for("teams.get_public_teams"))
+        return redirect(request.referrer)

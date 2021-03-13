@@ -106,7 +106,6 @@ def get_team(team_id):
 
 
 @teams.route("/teams/<int:team_id>/edit", methods=["GET", "POST"])
-@login_required
 def edit_team_details(team_id):
     """
     GET returns the template for the edit team page, when the form is submitted the data is
@@ -116,7 +115,7 @@ def edit_team_details(team_id):
     team = Team.query.filter_by(id=team_id)
 
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team[0].owner_id:
+    if current_user.is_authenticated and current_user.id == team[0].owner_id:
         form = EditTeamForm()
         if form.validate_on_submit():
             data = {}
@@ -146,7 +145,6 @@ def edit_team_details(team_id):
 
 
 @teams.route("/teams/<int:team_id>/delete", methods=["POST"])
-@login_required
 def delete_team(team_id):
     """
     Deletes the team from the database with a cascading effect on all child entries.
@@ -155,7 +153,7 @@ def delete_team(team_id):
     team = Team.query.get(team_id)
 
     # Check is to prevent users from accessing the endpoint by manually entering the url if it's not their team
-    if current_user.id == team.owner_id:
+    if current_user.is_authenticated and current_user.id == team.owner_id:
         form = DeleteTeamForm()
         if form.validate_on_submit():
             team = Team.query.get(team_id)
