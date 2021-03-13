@@ -66,14 +66,6 @@ def create_app():
     def handle_validation_error(error):
         return (jsonify(error.messages), 400)
 
-    @app.errorhandler(Exception)
-    def global_error_handler(error):
-        return render_template('404.html'), 404
-
-    @app.errorhandler(400)
-    def bad_request_error_handler(error):
-        return render_template('404.html'), 404
-
     return app
 
 
