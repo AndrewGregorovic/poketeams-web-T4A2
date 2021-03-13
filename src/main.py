@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from flask import abort, flash, Flask, jsonify, redirect, render_template, url_for
+from flask import flash, Flask, jsonify, redirect, render_template, url_for
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
