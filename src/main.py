@@ -70,4 +70,4 @@ def create_app():
 
 
 def my_error_func(error_message):
-    return abort(404)
+    return render_template("404.html"), 404
